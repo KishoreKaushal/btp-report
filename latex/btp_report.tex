@@ -10,9 +10,8 @@
 \usepackage{epsfig,color}
 % Custom packages
 %\usepackage[first]{datestamp}   % Datestamp on first page of each chapter
-
-
-\usepackage{color}
+\usepackage{caption}
+\usepackage{breqn}
 %===== page layout
 % Define the side margins for a right-side page
 %\insidemargin = 1.3in \outsidemargin = 0.9in
@@ -20,51 +19,50 @@
 % Below margin is space below footer
 %\abovemargin = 1.5in \belowmargin = 0.05in
 
-
-\btptitle = {Title of Your BTP} % { and } are needed around your name
-\name = {Student Name}          % and other feilds. don't remove.
-\rollno = {03010104}
-\email = {id.iitg.ernet.in}
-\guide = {Your guide name}
+\btptitle = {AI in Anomaly Detection and Image Processing} % { and } are needed around your name
+\name = {Kaushal Kishore}          % and other feilds. don't remove.
+\rollno = {111601008}
+\email = {111601008@smail.iitpkd.ac.in}
+\guide = {Dr. Chandra Shekar}
 
 
 \begin{document}
 
-\include{title}
+    \include{title}
 
-\include{certificate}
+    \include{certificate}
 
-\include{acknowledgement}
+    \include{acknowledgement}
 
-\tableofcontents 
+    \tableofcontents
 
-\addcontentsline{toc}{chapter}{List of Figures} 
-\listoffigures 
+    \addcontentsline{toc}{chapter}{List of Figures}
+    \listoffigures
 
-\addcontentsline{toc}{chapter}{List of Tables} 
-\listoftables
+    \addcontentsline{toc}{chapter}{List of Tables}
+    \listoftables
 
-\pagenumbering{arabic}
-\def\headrulehook{\color{black}}      % Color the header rule
+    \pagenumbering{arabic}
+    \def\headrulehook{\color{black}}      % Color the header rule
 
 %========== Chapters
-\typeout{}
-\include{chapter1}
-\cleardoublepage 
-\typeout{}
-\include{chapter2}
-\cleardoublepage 
-\typeout{}
-\include{chapter3}
-\cleardoublepage 
-\typeout{}
-\include{chapter4}
-\cleardoublepage 
-\typeout{}
-\include{futurework}
-\typeout{}
+    \typeout{}
+    \include{chapter1}
+    \cleardoublepage
+    \typeout{}
+    \include{chapter2}
+    \cleardoublepage
+    \typeout{}
+    \include{chapter3}
+    \cleardoublepage
+    \typeout{}
+    \include{chapter4}
+    \cleardoublepage
+    \typeout{}
+    \include{futurework}
+    \typeout{}
 
-\bibliographystyle{IEEEtran}
-\bibliography{btp}
+    \bibliographystyle{IEEEtran}
+    \bibliography{btp}
 \end{document}
 
