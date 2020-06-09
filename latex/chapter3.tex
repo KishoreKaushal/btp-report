@@ -20,3 +20,39 @@ Hence, it is very likely that anomalous points won't be isolated near the root a
 
 \paragraph{Presence of non-ordinal categorical attributes:} A very big limitation of iForest is that it only works for those datasets where all the features are real-values or ordinal.
 
+\section{Partial Indentification}
+\label{sec:partial-identification}
+
+We will briefly discuss some concepts present in section 2 of Vatsal et al. \cite{NIPS2019_9710}. 
+
+\paragraph{Notations:} Let $T$ denote a dataset of $n$ points in $d$ dimensions. Given indices $S \subseteq [d]$ and $x \in R$, let $x_S$ denote the projection of $x$ onto coordinates in $S$. All the logarithms are to base 2.
+
+\subsection{Boolean Setting}
+\label{subsec:boolean-setting}
+
+In Boolean setting $T \subseteq \{0,1\}^d$ and assume that $T$ has no duplicates. 
+
+\begin{defn}
+    (IDs for a point) We say that $S \subseteq [d]$ is an ID for $x \in T$ if $x_S \neq y_S\,, \forall y \in T \setminus {x}$.
+    Let ID(x,T) be the smallest ID for $x$ breaking ties arbitrarily. 
+    Let idLength(x,T) = $\vert ID(x, T) \vert$.
+\end{defn}
+
+\begin{defn}
+    (Imposters)  Given $x \in T$ and $S \subseteq [d]$, the set of   impostors of $x$ in $T$ are all points that equal $x$ on all coordinates in $S$, i.e., $Imp(x, T, S) = \{y \in T \mid x_S = y_S\}$.
+\end{defn}
+
+\begin{defn}
+    (Partial ID) 
+    $PID(x,T) = arg \min_{S \subseteq [d]} 
+    (\vert S \vert + log_{2}(\vert Imp(x, T, S) \vert)),$
+
+    and $pidLength(x,T) = \min_{S \subseteq [d]} 
+    (\vert S \vert + log_{2}(\vert Imp(x, T, S) \vert)).$
+\end{defn}
+\pagebreak
+
+\paragraph{Geometric view of pidLength: } 
+A subcube $C$ of $\{0, 1\}^d$ is the set of points obtained by fixing some subset $S \subseteq [d]$ coordinates to values in 0, 1. 
+The sparsity of $T$ in a subcube C is $\rho_{0,1}(T, C) = \frac{\vert C \vert}{\vert C \cap T\vert}$. 
+The notation $C \ni x$ means that $C$ contains $x$, hence $\min_{C \ni x}$ is the minimum over all $C$ that contain $x$. Anomalies are points that lie in relatively sparse subcubes. Low scores come with a natural witness: a sparse subcube $PID(x, T)$ containing relatively few points from T.
