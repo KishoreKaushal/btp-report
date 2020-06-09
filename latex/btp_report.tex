@@ -20,6 +20,16 @@
 %%% Coloring the comment as blue
 \newcommand\mycommfont[1]{\footnotesize\ttfamily\textcolor{blue}{#1}}
 \SetCommentSty{mycommfont}
+
+
+\newcommand*{\captionsource}[2]{%
+  \caption[{#1}]{%
+    #1%
+    \\\hspace{\linewidth}%
+    \textbf{Source:} #2%
+  }%
+}
+
 %===== page layout
 % Define the side margins for a right-side page
 %\insidemargin = 1.3in \outsidemargin = 0.9in

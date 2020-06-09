@@ -22,6 +22,27 @@ Anomalies are those instances which have short average path lengths on the iTree
 There are two training parameters and one evaluation parameter in this method: the training parameters are the number of trees to build and subsampling size.
 The evaluation parameter is the tree height limit during evaluation.
 
+\vspace{1em}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.80\textwidth]{../fig/chapter2/isolating-a-point.png}
+    
+    \captionsource{\textbf{Left}: a normal point $x_i$ requires twelve random partitions to be isolated; \textbf{Right}: an anomaly $x_o$ requires only four partitions to be isolated.}
+    {Lui et al. \cite{10.1145/2133360.2133363}}
+    \label{fig:isolating-a-point}
+\end{figure}
+
+
+\vspace{1em}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.50\textwidth]{../fig/chapter2/path-length-for-that-point.png}
+    
+    \captionsource{Averaged path lengths of $x_i$ and $x_o$ converge when the number of trees increases.}
+    {Lui et al. \cite{10.1145/2133360.2133363}}
+    \label{fig:path-length}
+\end{figure}
+
 \section{Training Stage}
 \label{sec:iforest-training}
 
@@ -137,23 +158,102 @@ In the evaluation stage$^{[\ref{alg:PathLength}]}$, a single path length $h(x)$ 
 When the traversal reaches a predefined height limit $hlim$, the return value is $e$ plus an adjustment $c(size)$.
 This adjustment accounts for estimating an average path length of a random sub-tree which could be constructed using data of $size$ beyond the tree height limit.
 When $h(x)$ is obtained for each tree of the ensemble, an anomaly score is computed.
-The anomaly score and the adjustment $c(size)$ are defined as follows.
+The anomaly score and the adjustment $c(size)$ is defined in the next section.
+
+\section{Anomaly Score}
+\label{sec:iforest-anomaly-score}
+
+The difficulty in deriving an anomaly score from $h(x)$ is that while the maximum possible height of iTree grows in the order of $\psi$, the average height grows in the order of $log\,\psi$.
+When required to visualize or compare path lengths from models of different subsampling sizes, normalization of $h(x)$ by any of the above terms either is not bounded or cannot be directly compared.
+Thus, a normalized anomaly score is needed for the aforementioned purposes.
+
+Since iTrees have an equivalent structure to Binary Search Tree, the estimation of average $h(x)$ for external node terminations is the same as that of the unsuccessful searches in BST.
+
+Section 10.3.3 of \cite{10.5555/289373} gives the average path length of unsuccessful searches
+in BST as:
+
+\vspace{-2em}
+\begin{equation}
+    \label{eq:average-path-length-of-unsuccessful-searches-bst}
+    \begin{split}
+        c(\psi) =  \left\{
+        \begin{matrix}
+            2H(\psi -1) - 2(\psi -1)/n & \text{for}\: \psi>2,\\
+            1 &  \text{for}\: \psi=2,\\
+            0 & \text{otherwise.}
+        \end{matrix}\right.
+    \end{split}
+\end{equation}
+
+where $H(i) \approx \ln(i) + 0.5772156649$  (euler's constant), is the harmonic number. As $c(\psi)$ is the average of $h(x)$ given $\psi$, we use it to normalise $h(x)$. The anomaly score $s$ of an instance $x$ is defined as:
+
+\begin{equation}
+    \label{eq:iforest-anomaly-score-for-an-instance}
+    s(x,\psi) = 2^{\frac{-E[h(x)]}{c(\psi)}}
+\end{equation}
+
+where $E[h(x)]$ is the average of $h(x)$ from a collection of iTrees. 
+
+Anomaly score $s(x,\psi)$ is interpreted as follows:
+
+\begin{enumerate}
+    \vspace{-1em}
+    \setlength\itemsep{-1em}
+    \item if $s \approx 1$, instance is abnormal
+    \item if $s \approx 0$, instance is nominal
+    \item if $s \approx 0.5$, no distinct anomaly
+\end{enumerate}
+
+\vspace{1em}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.80\textwidth]{../fig/chapter2/iforest-visualization.png}
+    \captionsource{Isolation Forest}
+    {\href{https://www.slideshare.net/mlvlc/l14-anomaly-detection}{slideshare.com}}
+    \label{fig:iforest-visualization}
+\end{figure}
+
+In practical use cases, one has to set a threshold deciding the result. And finding a good threshold is a very difficult task. Most of the times the anomalous points' score overlaps with the nominal points' score.
+
+\section{Isolation vs. Distance and Density}
+\label{sec:isolation-vs-distance-density}
+
+Using basic density measures, the assumption is that ‘Normal points occur in dense regions, while anomalies occur in sparse regions’.
+Using basic distance measures, the basic assumption is that ‘Normal point is close to its neighbours and anomaly is far from its neighbours’.
+
+There are violations of these assumptions: i) high density and short distance do not always imply normal instances ii) low density and long distance do not always imply anomalies.
+
+\begin{figure}
+    \centering
+    \subfigure[density based method k-NN]{\label{fig:a}\includegraphics[width=0.4\textwidth]{../fig/chapter2/high-density-short-distances-1.png}}
+    \subfigure[distance based method kth-distance]{\label{fig:b}\includegraphics[width=0.4\textwidth]{../fig/chapter2/high-density-short-distances-2.png}}
+    \captionsource{High density and short distance do not always imply normal instances.}
+    {Lui et al. \cite{10.1145/2133360.2133363}}
+    \label{fig:high-density-short-distance}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \subfigure[density based method k-NN]{\label{fig:a}\includegraphics[width=0.4\textwidth]{../fig/chapter2/low-density-long-distances-1.png}}
+    \subfigure[distance based method kth-distance]{\label{fig:b}\includegraphics[width=0.4\textwidth]{../fig/chapter2/low-density-long-distances-2.png}}
+    \captionsource{Low density and long distance do not always imply anomalies.}
+    {Lui et al. \cite{10.1145/2133360.2133363}}
+    \label{fig:low-density-long-distance}
+\end{figure}
+
+Isolation Forest compares favourably to distance and density  based methods in terms of accuracy and processing time. 
+Distance and density based suffers immensly in terms of accuracy and processing time because of curse of dimensionalty.
 
 
+Distance based methods also suffers from masking and swamping effect. 
+In isolation forest, masking and swamping effects can be managed by adjusting the $hlim$ parameter during evaluation. Refer section 4.5, 5.3 and 5.4 of Lui et al. \cite{10.1145/2133360.2133363}.
 
 
+Codes for \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/IsolationForest.py}{Isolation Forest} and \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/IsolationTree.py}{Isolation Tree} can be found at \href{https://github.com/KishoreKaushal/AnomalyDetection}{this} repository.
 
 
-\begin{defn}
+\section{Conclusion}
+\label{sec:iforest-conclusion}
 
-\end{defn}
-
-
-
-
-This chapter provided details of the some of the existing
-distributed algorithms for constructing a CDS in wireless ad-hoc
-networks. The results of these evaluations are summarized in table. In next chapter, we discuss our distributed
-Algorithm I, for constructing a small backbone in ad-hoc wireless
-network.
+To conclude, isolation forest is one of the most efficient and accurate methods for anomaly detection. It outperforms various density and distance based methods like ORCA, DOLPHIN, LOF, ROF, etc. and their variants in terms of accuracy and performance. Still there are some shortcomings of the isolation forest that we will discuss in next chapter.
 
