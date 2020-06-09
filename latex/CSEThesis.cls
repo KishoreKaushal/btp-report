@@ -21,6 +21,7 @@
 \newtheorem{obs}{Observation:}
 \newtheorem{conj}{Conjecture:}
 \newtheorem{prop}[theorem]{Proposition:}
+\newtheorem{defn}[theorem]{Definition:}
 
 \def\QED{\ensuremath{{\square}}}
 \def\markatright#1{\leavevmode\unskip\nobreak\quad\hspace*{\fill}{#1}}
