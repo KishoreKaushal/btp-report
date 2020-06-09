@@ -42,8 +42,12 @@ An anomalous spot in an astronomy image could indicate the discovery of a new st
 An unusual computer network traffic pattern could stand for unauthorised access.
 These applications demand anomaly detection algorithms with high detection accuracy and fast execution.
 
-\section{Masking and Swamping}
-\label{sec:masking-and-swamping-definition}
+\section{Challenges}
+\label{sec:anomaly-detection-challenges}
+
+
+\subsection{Masking and Swamping}
+\label{subsec:masking-and-swamping}
 
 Masking and swamping is the biggest problem affecting any anomaly detection algorithm.
 
@@ -59,8 +63,8 @@ Masking is one reason that trying to apply a single outlier test sequentially ca
 For example, if there are multiple outliers, masking may cause the outlier test for the first outlier to return a conclusion of no outliers.
 So the testing is not performed for any additional outliers.
 
-\section{Concept drift}
-\label{sec:concept-drift-definition}
+\subsection{Concept drift}
+\label{subsec:concept-drift}
 
 In the case of streaming data, the anomaly context can change over time.
 For example, consider a user's behaviour change from one system to another.
@@ -68,6 +72,24 @@ The anomaly detection algorithm should adapt to this change in the behaviour of 
 This deviation of the normal behaviour time to time is called concept drift.
 Any online anomaly detection algorithm must have a way to deal with this.
 
+\subsection{Miscellaneous}
+\label{subsec:misc-challenges}
+
+Apart from the above conceptual challenges, here are some general challenges pointed out by Vatsal et al. \cite{NIPS2019_9710}
+
+\paragraph{High dimensional, heterogeneous data:}
+The data collected could contains measurements of metrics like cpu usage, memory, bandwidth, temperature, in addition to categorical data such as day of the week, geographic location, OS type. 
+This makes finding an accurate generative model for the data challenging. 
+The metrics might be captured in different units, hence algorithms that are unit-agnostic are preferable. 
+The algorithm needs to scale to high dimensional data.
+
+\paragraph{Scarce labels:} Most of the data are unlabeled. Generating labels is time and effort intensive
+and requires domain knowledge. Hence supervised methods are a non-starter, and even
+tuning too many hyper-parameters of unsupervised algorithms could be challenging.
+
+\paragraph{Irrelevant attributes:}
+Often an anomaly manifests itself in a relatively small number of attributes among the large number being monitored. 
+For instance, a single machine in a large datacenter might be compromised and behave abnormally.
 
 \section{Organization of The Report}
 \label{sec:organization-of-the-report}
