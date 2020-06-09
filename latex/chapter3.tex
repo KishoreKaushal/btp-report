@@ -1,13 +1,22 @@
 \chapter{PIDForest}
 \label{ch:pidforest}
 
-In this chapter, we will review some challenges to 
+In chapter \ref{ch:introduction} we discussed some of the challenges that an anomaly detection algorithm face. 
+In the previous chapter we discussed an isolation based ensemble method which is a very good method in terms of complexity and accuracy. Isolation forest tried to address the problems related to masking and swamping.
+In this chapter we will point out some major issues with isolation forest and 
+discuss another ensemble method, which improves upon those issues.
 
-\section{Conclusion}
-In this chapter, we proposed a distributed algorithm
-for construction of xyz.
-The complexity of this algorithm is $O(n \log n)$.
-Next chapter presents
-another distributed algorithm which has linear time 
-complexity based on xyz.
+\section{Issues with Isolation Forest}
+\label{sec:issues-with-iforest}
+
+\paragraph{Random Split:} iForest repeatedly samples a set $X'$ of $\psi$ points from $X$ and builds a random tree with those points as leaves. 
+The tree is built by choosing a random co-ordinate $q$, and a random value $p$ in its range about which to split. 
+Since iForest chooses which coordinate we split on as well as the breakpoint at random. 
+Thus to be isolated at small depth frequently, picking splits at random must have a good chance of isolating an anomalous point.
+Although, there are other variants like extended isolation forest which improves on this, but there is no significant improvements.
+
+\paragraph{High Dimensional:} As the number of co-ordinates or attributes increases, probability of choosing a sequence of attributes for split which gives rise to most of the anomalies will be very less. 
+Hence, it is very likely that anomalous points won't be isolated near the root and false negative cases will increase. (In anomaly detection problem, anomaly is the true class.)
+
+\paragraph{Presence of non-ordinal categorical attributes:} A very big limitation of iForest is that it only works for those datasets where all the features are real-values or ordinal.
 
