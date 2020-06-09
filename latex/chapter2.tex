@@ -22,8 +22,8 @@ Anomalies are those instances which have short average path lengths on the iTree
 There are two training parameters and one evaluation parameter in this method: the training parameters are the number of trees to build and subsampling size.
 The evaluation parameter is the tree height limit during evaluation.
 
-\section{Algorithm}
-\label{sec:iforest-algorithm}
+\section{Training Stage}
+\label{sec:iforest-training}
 
 Formally, isolation tree is defined as follows:
 
@@ -32,7 +32,7 @@ Formally, isolation tree is defined as follows:
     T is either an external-node with no child, or an internal-node with one test and exactly two daughter nodes $(T_l, T_r)$.
     A test at node $T$ consists of an attribute $q$ and a split value $p$ such that the test $q < p$ determines the traversal of a data point to either $T_l$ or $T_r$.
     Let X = $\{x_1, ..., x_n\}$ be the given data set of a d-variate distribution.
-    A sample of instances X'$\subset$ X is used to build an isolation tree.
+    A sample of instances X'$\subset$ X is used to build an isolation tree$^{[\ref{alg:iTree}]}$.
     We recursively divide X' by randomly selecting an attribute q and a split value p, until either: i) Node has only one instance ii) Or, all data at the node have the same values.
 \end{defn}
 
@@ -48,11 +48,12 @@ Formally, isolation tree is defined as follows:
         \item S is the set of isolation trees.
     \end{itemize}
     \vspace{-1em}
-    The elements of set S is constructed by sampling $\psi$ instances from X without replacement.
+    The elements of set S is constructed$^{[\ref{alg:iForest}]}$ by sampling $\psi$ instances from X without replacement.
 \end{defn}
 
 \vspace{1em}
 \begin{algorithm}[H]
+    \caption{$iForest(X,t,\psi)$}\label{alg:iForest}
     \setstretch{1.2}
     \SetAlgoLined
     \KwComplexity{Time - $O(t\psi^2)$, Space - $O(t\psi)$}
@@ -68,12 +69,11 @@ Formally, isolation tree is defined as follows:
     }
 
     \Return{Forest}
-
-    \caption{$iForest(X,t,\psi)$}\label{alg:iForest}
 \end{algorithm}
 
 \vspace{1em}
 \begin{algorithm}[H]
+    \caption{$iTree(X)$}\label{alg:iTree}
     \setstretch{1.2}
     \SetAlgoLined
     \KwComplexity{Time - $O(\psi^2)$, Space - $O(\psi)$}
@@ -99,10 +99,54 @@ Formally, isolation tree is defined as follows:
     }
 
     \Return{tree}
-
-    \caption{$iTree(X)$}\label{alg:iTree}
 \end{algorithm}
 \vspace{1em}
+
+\section{Evaluation Stage}
+\label{sec:iforest-evaluation}
+
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \caption{$PathLength(x)$}\label{alg:PathLength}
+    \DontPrintSemicolon
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwComplexity{Time - $O(t\psi)$, Space - $O(1)$}
+    \KwInput{$x$ - input instance, $T$ - an iTree, $hlim$ - height limit, $e$ - current path length to be initialized to zero when called first time}
+    \KwOutput{path length of $x$}
+
+    \If{ (T.right is None) and (T.left is none) and (e $\geq$ hlim)}{
+
+        \Return $e + c(T.size)$ \tcp*{c(...) is defined in Equation 1}
+
+    }
+
+    $a \: \leftarrow \: T.splitAttr$
+
+    \If{ $x[a] < T.splitVal$}{
+        \Return  $PathLength(x, T.left, hlim, e + 1)$
+    }
+    \Else{
+        \Return  $PathLength(x, T.right, hlim, e + 1)$
+    }
+\end{algorithm}
+\pagebreak
+
+In the evaluation stage$^{[\ref{alg:PathLength}]}$, a single path length $h(x)$ is derived by counting the number of edges $e$ from the root node to an external node as instance $x$ traverses through an iTree.
+When the traversal reaches a predefined height limit $hlim$, the return value is $e$ plus an adjustment $c(size)$.
+This adjustment accounts for estimating an average path length of a random sub-tree which could be constructed using data of $size$ beyond the tree height limit.
+When $h(x)$ is obtained for each tree of the ensemble, an anomaly score is computed.
+The anomaly score and the adjustment $c(size)$ are defined as follows.
+
+
+
+
+
+
+\begin{defn}
+
+\end{defn}
 
 
 
