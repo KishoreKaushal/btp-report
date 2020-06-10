@@ -238,13 +238,15 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
     
         \qquad \}
 
-        $tree.cube = Cube(start, end)$
+        $tree.cube = Cube(start, end, \&tree)$
 
         \tcp{\&x stands for a reference of x}
         $tree.pointset = Pointset(filter(X, tree.cube), \& tree)$ 
 
         \If{tree.depth $<$ h and $\vert tree.pointset \vert > 1$}{ 
             \tcp{if not a leaf node then split}
+            
+            $tree.child \leftarrow \: findSplit(...)$
 
         }
         \Else{
@@ -261,16 +263,20 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
     \caption{$Cube(start, end)$}
     \setstretch{1.2}
     \SetAlgoLined
-    \KwInput{$[start, \, end]$ - interval for each attribute}
+    \KwInput{$[start, \, end]$ - interval for each attribute, , $node$ - to which node this subcube belongs to}
     \KwOutput{a $Cube$}
 
     $cube$ $\leftarrow$  \{
     
+        \qquad \qquad node : node
+
         \qquad \qquad start : start,
     
         \qquad \qquad end : end,
     
         \qquad \qquad logvolume : 0 \tcp*{log of volume of subcube}
+
+        \qquad \qquad child : EmptyList
     
         \qquad \}
 
@@ -359,3 +365,6 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
 \end{algorithm}
 
 \pagebreak
+
+Algorithm \ref{alg:pidtree} uses $findSplit(...)$ method to partition the current subcube into disjoint child subcubes.
+$findSplit(...)$ uses the $AHIST-S(...)$ procedure given by Guha et. al \cite{10.1145/1132863.1132873} which is $(1+\epsilon)-$factor approximation of V-optimal histogram construction. Due to complexity of the $findSplit(...)$ function we have not provided it's pseudo-code. You can find my implementation of the PIDForest and AHIST-S at \href{https://github.com/KishoreKaushal/AnomalyDetection/tree/master/pidforest}{this code repository}.
