@@ -33,26 +33,107 @@ We will briefly discuss some concepts present in section 2 of Vatsal et al. \cit
 In Boolean setting $T \subseteq \{0,1\}^d$ and assume that $T$ has no duplicates. 
 
 \begin{defn}
-    (IDs for a point) We say that $S \subseteq [d]$ is an ID for $x \in T$ if $x_S \neq y_S\,, \forall y \in T \setminus {x}$.
-    Let ID(x,T) be the smallest ID for $x$ breaking ties arbitrarily. 
-    Let idLength(x,T) = $\vert ID(x, T) \vert$.
+    \label{defn:id-for-a-point}
+    (ID for a point)
+    \vspace{-1em}
+    \begin{equation}
+        \label{eq:ID}
+        \begin{split}
+        id = \{ S \mid S \subseteq [d], x \in T \textrm{ and } \forall y \in T \setminus x, \, x_S \neq y_S \}  \\
+        ID(x,T) = arg \min_{S \subseteq [d]} \vert \{ S \mid S \subseteq [d], x \in T \textrm{ and } \forall y \in T \setminus x, \, x_S \neq y_S \} \vert
+        \end{split}
+    \end{equation}
+    \vspace{-2em}
+    \begin{equation}
+        idLength(x,T) = \vert ID(x, T) \vert
+    \end{equation}
 \end{defn}
 
 \begin{defn}
-    (Imposters)  Given $x \in T$ and $S \subseteq [d]$, the set of   impostors of $x$ in $T$ are all points that equal $x$ on all coordinates in $S$, i.e., $Imp(x, T, S) = \{y \in T \mid x_S = y_S\}$.
+    \label{defn:imposters}
+    (Imposters) 
+    \vspace{-1em}
+    \begin{equation}
+        \label{eq:imposters}
+        Imp(x, T, S) = \{y \in T \mid x \in T, S \subseteq [d] \textrm{ and } x_S = y_S\}
+    \end{equation}
 \end{defn}
 
+
 \begin{defn}
+    \label{defn:partial-ids}
     (Partial ID) 
-    $PID(x,T) = arg \min_{S \subseteq [d]} 
-    (\vert S \vert + log_{2}(\vert Imp(x, T, S) \vert)),$
-
-    and $pidLength(x,T) = \min_{S \subseteq [d]} 
-    (\vert S \vert + log_{2}(\vert Imp(x, T, S) \vert)).$
+    \vspace{-1em}
+    \begin{equation}
+        \label{eq:PID}
+        PID(x,T) = arg \min_{S \subseteq [d]} 
+    (\vert S \vert + log_{2}(\vert Imp(x, T, S) \vert)),
+    \end{equation}
+    \vspace{-2em}
+    \begin{equation}
+        \label{eq:pidLength}
+        pidLength(x,T) = \min_{S \subseteq [d]} 
+    (\vert S \vert + log_{2}(\vert Imp(x, T, S) \vert)).
+    \end{equation}
 \end{defn}
-\pagebreak
+
 
 \paragraph{Geometric view of pidLength: } 
-A subcube $C$ of $\{0, 1\}^d$ is the set of points obtained by fixing some subset $S \subseteq [d]$ coordinates to values in 0, 1. 
+A subcube $C$ of $\{0, 1\}^d$ is the set of points obtained by fixing some subset $S \subseteq [d]$ coordinates to values in 0, 1. (Refer section 1 of \cite{ellis_2011})
 The sparsity of $T$ in a subcube C is $\rho_{0,1}(T, C) = \frac{\vert C \vert}{\vert C \cap T\vert}$. 
 The notation $C \ni x$ means that $C$ contains $x$, hence $\min_{C \ni x}$ is the minimum over all $C$ that contain $x$. Anomalies are points that lie in relatively sparse subcubes. Low scores come with a natural witness: a sparse subcube $PID(x, T)$ containing relatively few points from T.
+
+\begin{defn}
+    \label{defn:pidforest-anomaly-score}
+    (Anomaly Score)
+    \vspace{-1em}
+    \begin{equation}
+        \label{eq:pidforest-anomaly-score}
+        s(x,T) = 2^{-pidLength(x,T)}
+    \end{equation}
+\end{defn}
+
+\subsection{Continuous Setting}
+
+Without loss of generality assume that $T \subseteq [0,1]^d$. 
+Length of an interval $I = [a,b], 0 \leq a \leq b \leq 1$ is $len(I) = (b-a)$. 
+A subcube $C$ is specified by a subset of co-ordinates $S$ and intervals $I_j, \forall j \in S$. 
+It consists of all points such that $x_j \in I_j, \forall j \in S$. 
+
+\begin{defn}
+    \label{defn:volume-of-subcube}
+    (Volume of a Subcube)
+    \vspace{-1em}
+    \begin{equation}
+        \label{eq:volume-of-subcube}
+        vol(C) = \prod_i len(I_i) \textrm{ where } C = \prod_j I_j \textrm{ and } I_k = [0,1] \textrm{ for } k \notin S.
+    \end{equation}
+\end{defn}
+
+\begin{defn}
+    \label{defn:sparsity}
+    (Sparsity of T in C)
+    \vspace{-1em}
+    \begin{equation}
+        \label{eq:sparsity}
+        \rho (T,C) = \frac{vol(C)}{\vert C \cap T \vert}
+    \end{equation}
+\end{defn}
+
+\pagebreak
+
+\begin{defn}
+    \label{defn:pidscore}
+    (PIDScore of x in T)
+    \vspace{-1em}
+    \begin{equation}
+        \label{eq:pidscore}
+        \begin{split}
+            PIDScore(x,T) = \max_{C \ni x} \rho (T,C), \\
+            PID(x,T) = arg \max_{C \ni x} \rho (T,C).
+        \end{split}
+    \end{equation}
+\end{defn}
+
+Refer section 2.2 of Vatsal et al. \cite{NIPS2019_9710} to see the analogy to the Boolean case.
+

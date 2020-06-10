@@ -49,6 +49,8 @@ The evaluation parameter is the tree height limit during evaluation.
 Formally, isolation tree is defined as follows:
 
 \begin{defn}
+    \label{defn:isolation-tree}
+    (Isolation Tree)
     Let T be a node of an isolation tree.
     T is either an external-node with no child, or an internal-node with one test and exactly two daughter nodes $(T_l, T_r)$.
     A test at node $T$ consists of an attribute $q$ and a split value $p$ such that the test $q < p$ determines the traversal of a data point to either $T_l$ or $T_r$.
@@ -59,6 +61,8 @@ Formally, isolation tree is defined as follows:
 
 
 \begin{defn}
+    \label{defn:isolation-forest}
+    (Isolation Forest)
     Isolation forest is defined as 4-tuple $(X, t, \psi, S)$ where
     \vspace{-1em}
     \begin{itemize}
