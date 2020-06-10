@@ -173,3 +173,187 @@ This idea is formulized in section 3 of Vatsal et al. \cite{NIPS2019_9710} and t
 \end{equation}
 
 Maximizing the variance has the advantage that it turns out to equivalent to a well-studied problem about histograms, and admits a very efficient streaming algorithm. Here we are going to use $(1+ \epsilon)-$factor approximation algorithm for histogram construction given by Guha et al. \cite{10.1145/1132863.1132873}.
+
+
+
+\vspace{3em}
+\begin{algorithm}[H]
+    \label{alg:pidforest}
+    \caption{$PIDForest(X,t,\psi, h, k, \epsilon)$}
+    \DontPrintSemicolon
+    \setstretch{1.2}
+    \SetAlgoLined
+    % \KwComplexity{Time - $O(t\psi^2)$, Space - $O(t\psi)$}
+    \KwInput{$X$ - input data, $t$ - number of trees, $\psi$ - subsampling size, $h$ - max depth, 
+    
+    $k$ - max partitions, $\epsilon$ - for histogram construction}
+    \KwOutput{List of $PIDTree$}
+
+    $Forest$ $\leftarrow$  \{
+    
+        \qquad \qquad trees : EmptyList,
+    
+        \qquad \qquad start : EmptyDictionary,
+    
+        \qquad \qquad end : EmptyDictionary
+    
+        \qquad \}
+
+    \For {$attr$ in $X.attributes$}{
+        
+        $Forest.start[attr] = X[attr].min() - \delta$   \tcp*{set $\delta$ to 1e-4 for precision issues}
+
+        $Forest.end[attr] = X[attr].max() + \delta$
+
+    }
+
+    \For {$i = 1$ to $t$}{
+        $X' \: \leftarrow \: sampleWithoutReplacement(X,\psi)$
+        
+        $Forest.trees.append(PIDTree(X',0, Forest.start, Forest.end, h, k, \epsilon))$
+    }
+
+    \Return{Forest}
+\end{algorithm}
+
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \label{alg:pidtree}
+    \DontPrintSemicolon
+    \caption{$PIDTree(X, e, start, end, h, k, \epsilon)$}
+    \setstretch{1.2}
+    \SetAlgoLined
+    % \KwComplexity{Time - $O(\psi^2)$, Space - $O(\psi)$}
+    \KwInput{$X$ - input data, $e$ - current depth, $[start, \, end]$ - interval for each attribute, $h$ - max depth, $k$ - max partitions, $\epsilon$ - for histogram construction}
+    \KwOutput{a $PIDTree$}
+
+    $tree$ $\leftarrow$  \{
+    
+        \qquad \qquad child : EmptyList,
+    
+        \qquad \qquad depth : e,
+    
+        \qquad \qquad sparsity : (-1)
+    
+        \qquad \}
+
+        $tree.cube = Cube(start, end)$
+
+        \tcp{\&x stands for a reference of x}
+        $tree.pointset = Pointset(filter(X, tree.cube), \& tree)$ 
+
+        \If{tree.depth $<$ h and $\vert tree.pointset \vert > 1$}{ 
+            \tcp{if not a leaf node then split}
+
+        }
+        \Else{
+            $tree.sparsity = computeSparsity()$
+        }
+
+    \Return{tree}
+\end{algorithm}
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \label{alg:cube}
+    \DontPrintSemicolon
+    \caption{$Cube(start, end)$}
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwInput{$[start, \, end]$ - interval for each attribute}
+    \KwOutput{a $Cube$}
+
+    $cube$ $\leftarrow$  \{
+    
+        \qquad \qquad start : start,
+    
+        \qquad \qquad end : end,
+    
+        \qquad \qquad logvolume : 0 \tcp*{log of volume of subcube}
+    
+        \qquad \}
+
+    
+    \For {$attr$ in $cube.start.keys()$}{ 
+        \tcp{recall that cube.start is a dictionary whose keys are attributes}
+    
+        $cube.logvolume\, += log(cube.start.end[attr] - cube.start.start[attr])$
+
+    }
+
+    \Return{cube}
+\end{algorithm}
+
+\pagebreak
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \label{alg:Pointset}
+    \DontPrintSemicolon
+    \caption{$Pointset(X, node)$}
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwInput{$X$ - input data, $node$ - to which node this set belongs to}
+    \KwOutput{a $Pointset$}
+
+    $pointset$ $\leftarrow$  \{
+    
+        \qquad \qquad X : X,
+    
+        \qquad \qquad node : node,
+    
+        \qquad \qquad val : EmptyDictionary,
+
+        \qquad \qquad count : EmptyDictionary,
+
+        \qquad \qquad gap : EmptyDictionary
+    
+        \qquad \}
+
+        \tcp{val, count and gap is used for converting to histogram problem} 
+        
+        \tcp{refer Appendix A of \cite{NIPS2019_9710}}
+
+    \For {$attr$ in $X.attributes$}{
+
+        \tcp{np.unique is a function from python numpy library}
+
+        $v, c \leftarrow$ np.unique(X[attr], return\_counts=True)
+    
+        $pointset.val[attr] \leftarrow \: v$
+        
+        $pointset.count[attr] \leftarrow \: c$
+
+        $pointset.gap[attr] \leftarrow [0]$
+
+        \If{$\vert v \vert > 1$}{
+        
+            \tcp{sum of all elements of pointset.gap for a attr is equal to }
+
+            \tcp{start[attr] - end[attr]}
+
+            $g \leftarrow$ List of 0's of size $\vert v \vert$
+
+            
+            $g[0] = (v[0] + v[1]) / 2 - pointset.node.cube.start[attr]$
+
+
+            \tcp{negative indexing is same as python programming language}
+
+            $g[-1] = pointset.node.cube.end[col] - (v[-1] + v[-2]) / 2$
+
+            \For{ i in range(1,$\vert v \vert$ - 1)}{
+
+                $g[i] = (v[i + 1] - v[i - 1]) / 2$
+                
+            }
+
+            $pointset.gap[attr] \leftarrow g$
+
+        }
+
+    }
+
+    \Return{pointset}
+\end{algorithm}

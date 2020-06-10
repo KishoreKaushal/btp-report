@@ -90,7 +90,7 @@ Formally, isolation tree is defined as follows:
     \For {$i = 1$ to $t$}{
         $X' \: \leftarrow \: sampleWithoutReplacement(X,\psi)$
 
-        $Forest \: \leftarrow \: Forest \cup iTree(X')$
+        $Forest.append(iTree(X'))$
     }
 
     \Return{Forest}
