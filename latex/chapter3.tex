@@ -164,7 +164,7 @@ At each internal node, we pick a coordinate $j \in [d]$, and breakpoints $t_{1} 
 \textbf{How to choose the partition?} We want to partition the cube into some sparse regions and some dense regions. 
 This idea is formulized in section 3 of Vatsal et al. \cite{NIPS2019_9710} and the objective functions turns out to be:
 
-\vspace{-1em}
+\vspace{-2em}
 \begin{equation}
     \label{eq:maximizing-variance}
     % \begin{split}
@@ -183,7 +183,7 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
     \DontPrintSemicolon
     \setstretch{1.2}
     \SetAlgoLined
-    % \KwComplexity{Time - $O(t\psi^2)$, Space - $O(t\psi)$}
+    \KwComplexity{Time - $O(t d \psi log(\psi))$}
     \KwInput{$X$ - input data, $t$ - number of trees, $\psi$ - subsampling size, $h$ - max depth, 
     
     $k$ - max partitions, $\epsilon$ - for histogram construction}
@@ -224,7 +224,7 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
     \caption{$PIDTree(X, e, start, end, h, k, \epsilon)$}
     \setstretch{1.2}
     \SetAlgoLined
-    % \KwComplexity{Time - $O(\psi^2)$, Space - $O(\psi)$}
+    \KwComplexity{Time - $O(d \psi log(\psi))$}
     \KwInput{$X$ - input data, $e$ - current depth, $[start, \, end]$ - interval for each attribute, $h$ - max depth, $k$ - max partitions, $\epsilon$ - for histogram construction}
     \KwOutput{a $PIDTree$}
 
@@ -264,7 +264,7 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
     \caption{$Cube(start, end)$}
     \setstretch{1.2}
     \SetAlgoLined
-    \KwInput{$[start, \, end]$ - interval for each attribute, , $node$ - to which node this subcube belongs to}
+    \KwInput{$[start, \, end]$ - interval for each attribute, $node$ - ref. of containing PIDTree}
     \KwOutput{a $Cube$}
 
     $cube$ $\leftarrow$  \{
@@ -369,3 +369,17 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
 
 Algorithm \ref{alg:pidtree} uses $findSplit(...)$ method to partition the current subcube into disjoint child subcubes.
 $findSplit(...)$ uses the $AHIST-S(...)$ procedure given by Guha et. al \cite{10.1145/1132863.1132873} which is $(1+\epsilon)-$factor approximation of V-optimal histogram construction. Due to complexity of the $findSplit(...)$ function we have not provided it's pseudo-code. You can find my implementation of the PIDForest and AHIST-S at \href{https://github.com/KishoreKaushal/AnomalyDetection/tree/master/pidforest}{this code repository}.
+
+
+Producing an anomaly score for each point is fairly straightforward. Say we want to compute a score for $y \in [0, 1]^d$. 
+Each tree in the forest maps $y$ to a leaf node $v$ and gives it a score $PIDTree.sparsity$. 
+We take the 70-80\% percentile score as our final score (any robust analog of the max will do).
+
+
+\section{Comparison with isolation forest}
+
+PIDForest improves upon the issues with isolation forest. Instead of choosing an attribute for partitioning a node into disjoint sets, PIDForest uses AHIST-S method to select an attribute with higher variance. Instead of choosing a random splitting value which is used to partition the set into two, PIDForest used AHIST-S method to get the optimal buckets which is used to do finer partition not limited to 2.
+
+As discussed in section \ref{sec:issues-with-iforest} isolation forest struggles to give decent results for high dimensional data, on the other hand PIDForest doesn't chooses the splitting attribute with uniform probability, it gives more preference to the attribute which has more variance, therefore doesn't suffer much from higher dimension.
+
+PIDForest is more complex data structure in comparison to Isolation Forest.
