@@ -250,7 +250,8 @@ Maximizing the variance has the advantage that it turns out to equivalent to a w
 
         }
         \Else{
-            $tree.sparsity = computeSparsity()$
+            $tree.sparsity \leftarrow tree.cube.logvolume - log(\vert tree.pointset.X \vert)$
+        
         }
 
     \Return{tree}
