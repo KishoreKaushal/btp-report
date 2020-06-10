@@ -137,3 +137,39 @@ It consists of all points such that $x_j \in I_j, \forall j \in S$.
 
 Refer section 2.2 of Vatsal et al. \cite{NIPS2019_9710} to see the analogy to the Boolean case.
 
+\subsection{Other attributes}
+
+To handle attributes over a domain D, we need to specify what subsets of D are intervals and how we measure their length.
+For discrete attributes, it is natural to define $len(I) = \frac{\vert I \vert}{\vert D \vert}$.
+For unordered discrete values, the right definition of interval could be singleton sets, like $country = Brazil$ or certain subsets, like $continent = Americas$. The right choice will depend on the dataset.
+
+
+\section{PIDForest Algorithm}
+\label{sec:pidforest-algorithm}
+
+Like with iForest, the PIDForest algorithm builds an ensemble of decision trees, each tree is built using a sample of the data set and partitions the space into subcubes. 
+However, the way the trees are constructed and the criteria by which a point is declared anomalous are very different.
+
+Vatsal et al. \cite{NIPS2019_9710} provided a rough idea on how a PIDForest is to be constructed without emphasising much on the pseudo-code. In this report we will fill the gaps and provide pseudo-codes for various data structures to be implemented for PIDForest.
+
+Each node of a tree corresponds to a subcube $C$, the children of $C$ represent a disjoint partition of $C$ along some axis $i \in [d]$ (iTree$^{[\ref{alg:iTree}]}$ always splits C into two, here finer partition is allowed). 
+The goal is to have large variance in the sparsity ($\rho$) of the subcubes. 
+Ultimately, the leaves with large sparsity values will point to regions with anomalies.
+
+For each tree, we pick a random sample $P \subseteq T$ of $m$ points, and use that subset to build the tree.
+Each node $v$ in the tree corresponds to subcube $C(v)$, and a set of points $P(v) = C(v) \cap P$.
+For the root, $C(v) = [0, 1]^d$ and $P (v) = P$. 
+At each internal node, we pick a coordinate $j \in [d]$, and breakpoints $t_{1} \leq ... \leq t_{k-1}$ which partition $I_j$ into $k$ intervals, and split $C$ into $k$ subcubes. 
+
+\textbf{How to choose the partition?} We want to partition the cube into some sparse regions and some dense regions. 
+This idea is formulized in section 3 of Vatsal et al. \cite{NIPS2019_9710} and the objective functions turns out to be:
+
+\vspace{-1em}
+\begin{equation}
+    \label{eq:maximizing-variance}
+    % \begin{split}
+        arg \max_{ \{ C^i \}_{i \in k} } Var(P, \{ C^i \}_{i \in k})
+    % \end{split}
+\end{equation}
+
+Maximizing the variance has the advantage that it turns out to equivalent to a well-studied problem about histograms, and admits a very efficient streaming algorithm. Here we are going to use $(1+ \epsilon)-$factor approximation algorithm for histogram construction given by Guha et al. \cite{10.1145/1132863.1132873}.
