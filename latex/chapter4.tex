@@ -169,13 +169,12 @@ Now the modified model for isolation forest is given by the following algorithms
 
 \vspace{1em}
 \begin{algorithm}[H]
-    \caption{$updateWeights(x, T, hlim, \eta, y)$}\label{alg:updateWeights}
+    \caption{$updateWeights(x, T, hlim, \eta, y)$}\label{alg:update-weights-iforest}
     \DontPrintSemicolon
     \setstretch{1.2}
     \SetAlgoLined
     \KwComplexity{Time - $O(t\psi)$, Space - $O(1)$}
     \KwInput{$x$ - input instance, $T$ - a $feedbackITree$, $hlim$ - height limit, $\eta$ - learning rate, $y$ - feedback}
-    \KwOutput{path length of $x$}
 
     \If{ (T.right is None) and (T.left is none) and (e $\geq$ hlim)}{
 
@@ -222,3 +221,81 @@ We need to define a GLAD model that replicates pidforest.
 \textbf{Define $w$}  be a vector that concatenate all of the weights across the forest in a consistent order.
 
 Now the modified model for pidforest is given by the following algorithms:
+
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \label{alg:feedback-pidtree}
+    \DontPrintSemicolon
+    \caption{$feedbackPIDTree(X, e, start, end, h, k, \epsilon)$}
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwComplexity{Time - $O(d \psi log(\psi))$}
+    \KwInput{$X$ - input data, $e$ - current depth, $[start, \, end]$ - interval for each attribute, $h$ - max depth, $k$ - max partitions, $\epsilon$ - for histogram construction}
+    \KwOutput{a $feedbackPIDTree$}
+
+    $ftree$ $\leftarrow$  \{
+    
+        \qquad \qquad child : EmptyList,
+    
+        \qquad \qquad depth : e,
+    
+        \qquad \qquad sparsity : (-1),
+        
+        \qquad \qquad $w$ : (-1)
+        
+        \qquad \qquad $\theta$ : (-1)
+    
+        \qquad \}
+
+        $ftree.cube = Cube(start, end, \& ftree)$
+
+        \tcp{\&x stands for a reference of x}
+        $ftree.pointset = Pointset(filter(X, ftree.cube), \& ftree)$ 
+
+        \If{ftree.depth $<$ h and $\vert ftree.pointset \vert > 1$}{ 
+            \tcp{if not a leaf node then split}
+            
+            $ftree.child \leftarrow \: findSplit(...)$
+
+        }
+        \Else{
+            $ftree.sparsity \leftarrow ftree.cube.logvolume - log(\vert ftree.pointset.X \vert)$
+        
+            \tcp{$w, \theta$ will be used for mirror descent algorithm}
+
+            $ftree.\theta \leftarrow ftree.w \leftarrow ftree.sparsity$
+
+        }
+
+    \Return{ftree}
+\end{algorithm}
+
+
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \caption{$updateWeights(x, T, \eta, y)$}\label{alg:update-weights-pidforest}
+    \DontPrintSemicolon
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwComplexity{Time - $O(t\psi)$, Space - $O(1)$}
+    \KwInput{$x$ - input instance, $T$ - a $feedbackPIDTree$, $\eta$ - learning rate, $y$ - feedback}
+
+    \If{ $\vert T.child \vert$ == 0}{
+
+        \tcp{mirror descent update}
+
+        $nextNode.\theta \leftarrow nextNode.\theta - \eta * y$
+
+        $nextNode.w \leftarrow nextNode.\theta * (nextNode.\theta \geq 0)$
+
+        \Return{}
+
+    }
+
+    \tcp{get the nextNode where instance $x$ falls}
+    
+    $updateWeights(x, \&nextNode, hlim, \eta, y)$
+\end{algorithm}
+\pagebreak
