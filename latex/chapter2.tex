@@ -24,29 +24,28 @@ The evaluation parameter is the tree height limit during evaluation.
 
 \vspace{1em}
 \begin{figure}[!ht]
+    \label{fig:isolating-a-point}
     \centering
     \includegraphics[width=0.80\textwidth]{../fig/chapter2/isolating-a-point.png}
-    
     \captionsource{\textbf{Left}: a normal point $x_i$ requires twelve random partitions to be isolated; \textbf{Right}: an anomaly $x_o$ requires only four partitions to be isolated.}
     {Lui et al. \cite{10.1145/2133360.2133363}}
-    \label{fig:isolating-a-point}
 \end{figure}
 
 
 \vspace{1em}
 \begin{figure}[!ht]
+    \label{fig:path-length}
     \centering
     \includegraphics[width=0.50\textwidth]{../fig/chapter2/path-length-for-that-point.png}
     
     \captionsource{Averaged path lengths of $x_i$ and $x_o$ converge when the number of trees increases.}
     {Lui et al. \cite{10.1145/2133360.2133363}}
-    \label{fig:path-length}
 \end{figure}
 
 \section{Training Stage}
 \label{sec:iforest-training}
 
-Formally, isolation tree is defined as follows:
+Formally, we can define isolation forest as follows:
 
 \begin{defn}
     \label{defn:isolation-tree}
@@ -189,7 +188,8 @@ in BST as:
     \end{split}
 \end{equation}
 
-where $H(i) \approx \ln(i) + 0.5772156649$  (euler's constant), is the harmonic number. As $c(\psi)$ is the average of $h(x)$ given $\psi$, we use it to normalise $h(x)$. The anomaly score $s$ of an instance $x$ is defined as:
+where $H(i) \approx \ln(i) + 0.5772156649$  (euler's constant), is the harmonic number. As $c(\psi)$ is the average of $h(x)$ given $\psi$, we use it to normalise $h(x)$.
+The anomaly score $s$ of an instance $x$ is defined as:
 
 \begin{equation}
     \label{eq:iforest-anomaly-score-for-an-instance}
@@ -212,12 +212,14 @@ Anomaly score $s(x,\psi)$ is interpreted as follows:
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.80\textwidth]{../fig/chapter2/iforest-visualization.png}
-    \captionsource{Isolation Forest}
+    \captionsource{Isolation forest}
     {\href{https://www.slideshare.net/mlvlc/l14-anomaly-detection}{slideshare.com}}
     \label{fig:iforest-visualization}
 \end{figure}
 
-In practical use cases, one has to set a threshold deciding the result. And finding a good threshold is a very difficult task. Most of the times the anomalous points' score overlaps with the nominal points' score.
+In practical use cases, one has to set a threshold deciding the result.
+And finding a good threshold is a very difficult task.
+Most of the times the anomalous points' score overlaps with the nominal points' score.
 
 \section{Isolation vs. Distance and Density}
 \label{sec:isolation-vs-distance-density}
@@ -228,29 +230,30 @@ Using basic distance measures, the basic assumption is that ‘Normal point is c
 There are violations of these assumptions: i) high density and short distance do not always imply normal instances ii) low density and long distance do not always imply anomalies.
 
 \begin{figure}
+    \label{fig:high-density-short-distance}
     \centering
-    \subfigure[density based method k-NN]{\label{fig:a}\includegraphics[width=0.4\textwidth]{../fig/chapter2/high-density-short-distances-1.png}}
-    \subfigure[distance based method kth-distance]{\label{fig:b}\includegraphics[width=0.4\textwidth]{../fig/chapter2/high-density-short-distances-2.png}}
+    \subfigure[density based method k-NN]{\includegraphics[width=0.4\textwidth]{../fig/chapter2/high-density-short-distances-1.png}}
+    \subfigure[distance based method kth-distance]{\includegraphics[width=0.4\textwidth]{../fig/chapter2/high-density-short-distances-2.png}}
     \captionsource{High density and short distance do not always imply normal instances.}
     {Lui et al. \cite{10.1145/2133360.2133363}}
-    \label{fig:high-density-short-distance}
 \end{figure}
 
 \begin{figure}
+    \label{fig:low-density-long-distance}
     \centering
-    \subfigure[density based method k-NN]{\label{fig:a}\includegraphics[width=0.4\textwidth]{../fig/chapter2/low-density-long-distances-1.png}}
-    \subfigure[distance based method kth-distance]{\label{fig:b}\includegraphics[width=0.4\textwidth]{../fig/chapter2/low-density-long-distances-2.png}}
+    \subfigure[density based method k-NN]{\includegraphics[width=0.4\textwidth]{../fig/chapter2/low-density-long-distances-1.png}}
+    \subfigure[distance based method kth-distance]{\includegraphics[width=0.4\textwidth]{../fig/chapter2/low-density-long-distances-2.png}}
     \captionsource{Low density and long distance do not always imply anomalies.}
     {Lui et al. \cite{10.1145/2133360.2133363}}
-    \label{fig:low-density-long-distance}
 \end{figure}
 
-Isolation Forest compares favourably to distance and density  based methods in terms of accuracy and processing time. 
-Distance and density based suffers immensly in terms of accuracy and processing time because of curse of dimensionalty.
+Isolation forest compares favourably to distance and density  based methods in terms of accuracy and processing time.
+Distance and density based suffers immensely in terms of accuracy and processing time because of curse of dimensionality.
 
 
 Distance based methods also suffers from masking and swamping effect. 
-In isolation forest, masking and swamping effects can be managed by adjusting the $hlim$ parameter during evaluation. Refer section 4.5, 5.3 and 5.4 of Lui et al. \cite{10.1145/2133360.2133363}.
+In isolation forest, masking and swamping effects can be managed by adjusting the $hlim$ parameter during evaluation.
+Refer section 4.5, 5.3 and 5.4 of Lui et al. \cite{10.1145/2133360.2133363}.
 
 
 Codes for \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/IsolationForest.py}{Isolation Forest} and \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/IsolationTree.py}{Isolation Tree} can be found at \href{https://github.com/KishoreKaushal/AnomalyDetection}{this} repository.
@@ -259,5 +262,7 @@ Codes for \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/i
 \section{Conclusion}
 \label{sec:iforest-conclusion}
 
-To conclude, isolation forest is one of the most efficient and accurate methods for anomaly detection. It outperforms various density and distance based methods like ORCA, DOLPHIN, LOF, ROF, etc. and their variants in terms of accuracy and performance. Still there are some shortcomings of the isolation forest that we will discuss in next chapter.
+To conclude, isolation forest is one of the most efficient and accurate methods for anomaly detection.
+It outperforms various density and distance based methods like ORCA, DOLPHIN, LOF, ROF, etc and their variants in terms of accuracy and performance.
+Still, there are some shortcomings of the isolation forest that we will discuss in next chapter.
 

@@ -18,7 +18,7 @@ In this chapter I will present some enhancements that can be made to improve the
 
 Anomaly detectors are often used to produce a ranked list of statistical anomalies, which are examined by human analysts in order to extract the actual anomalies of interest. 
 
-This can be exceedingly difficult and time consuming when most high-ranking anomalies are false positives and not interesting from an application perspective. 
+This can be exceedingly difficult and time-consuming when most high-ranking anomalies are false positives and not interesting from an application perspective.
 
 Siddiqui et al. \cite{10.1145/3219819.3220083} address this problem and gives a general framework of how we can convert unsupervised anomaly detection to a semi-supervised anomaly detection problem in which a feedback is given by a domain expert which is used to improve the accuracy of the anomaly detection model. 
 Feedback guided anomaly discovery can be model in online convex optimization (OCO) framework. 
@@ -27,7 +27,8 @@ Feedback guided anomaly discovery can be model in online convex optimization (OC
 \subsection{Online convex optimization}
 \label{subsec:online-convex-optimization}
 
-OCO is formulated as an iterative game against a potentially adversarial environment where our moves are vectors from a convex set $S$. At discrete time steps $t$ the game proceeds as follows:
+OCO is formulated as an iterative game against a potentially adversarial environment where our moves are vectors from a convex set $S$.
+At discrete time steps $t$ the game proceeds as follows:
 
 \begin{enumerate}
     \setlength\itemsep{-0.5em}
@@ -56,24 +57,25 @@ wish to minimize the number of times we receive "nominal" as the
 feedback response.
 
 To put this problem in OCO framework Siqqiqui et al. \cite{10.1145/3219819.3220083} have put some reasonable restrictions on the form of the anomaly detectors that we will consider.
-Only family of generalized linear anomaly detectors(GLADs) which are defined by i) a feature function $\phi : D \rightarrow R^n$, which maps data instances to n-dimenstional vectors and ii) n-dimenstional weight vector $w$ are considered.
+Only family of generalized linear anomaly detectors (GLADs) which are defined by i) a feature function $\phi : D \rightarrow R^n$, which maps data instances to n-dimensional vectors and ii) n-dimensional weight vector $w$ are considered.
 In this context anomaly score for an instance $x$ is defined to be $SCORE(x;w) = - \phi \cdot w$ with larger score corresponding to more anomalous instances.
 
 
-
-Given, a GLAD parameterization of an anomaly detector, we can now connect query-guided anomaly discovery to OCO.
+Given, a GLAD parameterization of an anomaly detector, we can now connect query-guided anomaly discovery to OCO\@.
 
 On each feedback round we select a vector $w_t$ for the detector, which specifies an anomaly ranking over instances. 
-We recieve feedback $y_t$ on the top ranked instance, where $y_t = +1$ if the instance is alien and $y_t = -1$ if it is nominal.
+We receive feedback $y_t$ on the top ranked instance, where $y_t = +1$ if the instance is alien and $y_t = -1$ if it is nominal.
 
 There are three choices of loss function given in the Siddqui et al. \cite{10.1145/3219819.3220083}: i) linear loss ii) log-likelihood loss iii) logistic loss. 
 
-With the experiments, I came to conclusion that overall linear loss performs better than other two in terms of performance, computational complexity, and accuracy. Hence, throughout this report I will stick with only linear loss.
+With the experiments, I came to conclusion that overall linear loss performs better than other two in terms of performance, computational complexity, and accuracy.
+Hence, throughout this report I will stick only with linear loss.
 
 \begin{defn}
     \label{defn:linear-loss}
     (Linear loss)
-    Let $x_t$ be the top-ranked instance in $D$ under the ranking given by $w_t$. The linear loss is given by 
+    Let $x_t$ be the top-ranked instance in $D$ under the ranking given by $w_t$.
+    The linear loss is given by:
 
     \vspace{-2em}
     \begin{equation}
@@ -82,13 +84,14 @@ With the experiments, I came to conclusion that overall linear loss performs bet
     \end{equation}
 \end{defn}
 
-Algorithm 1 of Siqqiqui et al. \cite{10.1145/3219819.3220083} gives a general framework in which OCO can be applied on anomaly detector methods for query-guided anomaly discovery. In the next section we will model the isolation forest and pidforest in OCO framework.
+Algorithm 1 of Siqqiqui et al. \cite{10.1145/3219819.3220083} gives a general framework in which OCO can be applied on anomaly detector methods for query-guided anomaly discovery.
+In the next section we will model the isolation forest and pidforest in OCO framework.
 
 
 \section{Feedback guided isolation forest}
 \label{sec:feedback-guided-iforest}
 
-The isolation forest assigns an anomaly score to an instance $x$ based on its average isolation depth across the randomized forest, ref [\ref{alg:PathLength}]. 
+The isolation forest assigns an anomaly score to an instance $x$ based on its average isolation depth across the randomized forest, ref [\ref{alg:PathLength}].
 In particular, the score is (a normalized version of) the negative of
 this average depth.
 
@@ -96,16 +99,15 @@ We need to define a GLAD model that replicates isolation forest.
 
 \textbf{Define $\phi_e(x)$} be a binary feature that is 1 if instance x goes through the edge and 0 otherwise.
 \textbf{Define $w_e$} be the weight of each edge.
-\textbf{Define $\phi$}  be a vector that concatenate all of the features across the forest in a consistent order.
-\textbf{Define $w$}  be a vector that concatenate all of the weights across the forest in a consistent order.
+\textbf{Define $\phi$}  be a vector that concatenate all the features across the forest in a consistent order.
+\textbf{Define $w$}  be a vector that concatenate all the weights across the forest in a consistent order.
 
 Now the modified model for isolation forest is given by the following algorithms:
 
-
-
 \vspace{1em}
 \begin{algorithm}[H]
-    \caption{$feedbackITree(X)$}\label{alg:feedback-guided-itree}
+    \caption{$feedbackITree(X)$}
+    \label{alg:feedback-guided-itree}
     \setstretch{1.2}
     \SetAlgoLined
     \KwComplexity{Time - $O(\psi^2)$, Space - $O(\psi)$}
@@ -139,7 +141,8 @@ Now the modified model for isolation forest is given by the following algorithms
 
 \vspace{1em}
 \begin{algorithm}[H]
-    \caption{$unadjustedPathLength(x, T, hlim, e)$}\label{alg:unadjustedPathLength}
+    \caption{$unadjustedPathLength(x, T, hlim, e)$}
+    \label{alg:unadjustedPathLength}
     \DontPrintSemicolon
     \setstretch{1.2}
     \SetAlgoLined
@@ -169,7 +172,8 @@ Now the modified model for isolation forest is given by the following algorithms
 
 \vspace{1em}
 \begin{algorithm}[H]
-    \caption{$updateWeights(x, T, hlim, \eta, y)$}\label{alg:update-weights-iforest}
+    \caption{$updateWeights(x, T, hlim, \eta, y)$}
+    \label{alg:update-weights-iforest}
     \DontPrintSemicolon
     \setstretch{1.2}
     \SetAlgoLined
@@ -205,7 +209,7 @@ Now the modified model for isolation forest is given by the following algorithms
 \end{algorithm}
 \vspace{2em}
 
-You can find the complete implementation of the  \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/FeedbackIsolationForest.py}{feedback guided isolation forest} at my respository: \url{https://github.com/KishoreKaushal/AnomalyDetection}
+You can find the complete implementation of the  \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/FeedbackIsolationForest.py}{feedback guided isolation forest} at my repository: \url{https://github.com/KishoreKaushal/AnomalyDetection}
 
 
 
@@ -217,17 +221,17 @@ We need to define a GLAD model that replicates pidforest.
 
 \textbf{Define $\phi_{leaf}(x)$} be a binary feature for a $leaf$ node which is 1 if instance $x$ falls in that leaf.
 \textbf{Define $w_{leaf}$} be the sparsity of that $leaf$ node.
-\textbf{Define $\phi$}  be a vector that concatenate all of the features across the forest in a consistent order.
-\textbf{Define $w$}  be a vector that concatenate all of the weights across the forest in a consistent order.
+\textbf{Define $\phi$}  be a vector that concatenate all the features across the forest in a consistent order.
+\textbf{Define $w$}  be a vector that concatenate all the weights across the forest in a consistent order.
 
 Now the modified model for pidforest is given by the following algorithms:
 
 
 \vspace{1em}
 \begin{algorithm}[H]
+    \caption{$feedbackPIDTree(X, e, start, end, h, k, \epsilon)$}
     \label{alg:feedback-pidtree}
     \DontPrintSemicolon
-    \caption{$feedbackPIDTree(X, e, start, end, h, k, \epsilon)$}
     \setstretch{1.2}
     \SetAlgoLined
     \KwComplexity{Time - $O(d \psi log(\psi))$}
@@ -275,7 +279,8 @@ Now the modified model for pidforest is given by the following algorithms:
 
 \vspace{1em}
 \begin{algorithm}[H]
-    \caption{$updateWeights(x, T, \eta, y)$}\label{alg:update-weights-pidforest}
+    \caption{$updateWeights(x, T, \eta, y)$}
+    \label{alg:update-weights-pidforest}
     \DontPrintSemicolon
     \setstretch{1.2}
     \SetAlgoLined
@@ -301,20 +306,30 @@ Now the modified model for pidforest is given by the following algorithms:
 \pagebreak
 
 By putting these models in OCO framework our algorithm's accuracy increases. 
-Although for a large amount of streaming data the current algorithm is able to handle little bit of concept dript but as soon the new data diverges too much in value from the data on which these algorithms are trained there are no leaf nodes on which these new instances will fall. 
+Although for a large amount of streaming data the current algorithm is able to handle little-bit of concept drift but as soon the new data diverges too much in value from the data on which these algorithms are trained there are no leaf nodes on which these new instances will fall.
 In the next section, I propose a general framework in which this can be handled.
 
 \section{Online anomaly detection}
 \label{sec:online-anomaly-detection}
 
 
-Consider a streaming dataset $D = [x_1, x_2, \dots \dots  ]$ which increases in size as time progresses. We introduce timestamp of creation for each tree in the forest. It can be implemented by having a $timestamp$ field in the tree object. Then we can get the timestamp of creation for $i^{th}$ tree in the forest by querying $forest[i].timestamp$. Or we can use $Dictionary$ data structure indexed by $timestamp$ to implement forest. Either way is fine and left as implementation detail.
+Consider a streaming dataset $D = [x_1, x_2, \dots \dots  ]$ which increases in size as time progresses.
+We introduce the timestamp of creation for each tree in the forest.
+It can be implemented by having a $timestamp$ field in the tree object.
+Then we can get the timestamp of creation for $i^{th}$ tree in the forest by querying $forest[i].timestamp$.
+Or, we can use $Dictionary$ data structure indexed by $timestamp$ to implement forest.
+Either way is fine and left as implementation detail.
 
-For the discussion let's denote the initial forest as: $F = [T_{t=1}, \dots, T_{t=num\_trees}]$ where $t$ refers to timestamp and let timestamp be discrete numbers. Let $W$ be the window size. Let $D_{t} \subseteq D$ defined as $D_{t} = D[t:t+W] = [x_t, x_{t+1}, \dots, x_{t+W}]$. Let the model update after each $\delta$ time steps. The update can be done in two ways:
+For the discussion let's denote the initial forest as: $F = [T_{t=1}, \dots, T_{t=num\_trees}]$ where $t$ refers to timestamp and let the timestamp be discrete numbers.
+Let $W$ be the window size.
+Let $D_{t} \subseteq D$ defined as $D_{t} = D[t:t+W] = [x_t, x_{t+1}, \dots, x_{t+W}]$.
+Let the model update after each $\delta$ time steps.
+The update can be done in following two ways:
 
 \begin{enumerate}
     \item Retrain the model after every $\delta$ time steps by considering the dataset $D_{i * \delta + 1}$ where $i$ is the iteration number.
-    \item Discard $\alpha$ fraction of oldest timestamped trees from the forest and create only those many new trees by considering the dataset $D_{i * \delta + 1}$ where $i$ is the iteration number. Note that setting $\alpha = 1$ is same as the first way.
+    \item Discard $\alpha$ fraction of oldest timestamped trees from the forest and create only those many new trees by considering the dataset $D_{i * \delta + 1}$ where $i$ is the iteration number.
+    Note that setting $\alpha = 1$ is same as the first way.
 \end{enumerate}
 
 Both of the above ways allow us to handle the concept drift. 
@@ -325,11 +340,16 @@ Both of the above ways allow us to handle the concept drift.
 \section{Handling categorical attributes}
 \label{sec:handling-categorical-attributes}
 
-Vatsal et al. \cite{NIPS2019_9710} suggested that to handle the categorical dataset we need some inputs from the domain expert to partition the domain set into subsets such that similar elements are grouped together. For example, given the set of countries we may partition by continents. Hence, this becomes a clustering problem.
+Vatsal et al. \cite{NIPS2019_9710} suggested that to handle the categorical dataset we need some inputs from the domain expert to partition the domain set into subsets such that similar elements are grouped together.
+For example, given the set of countries we may partition by continents.
+Hence, this is similar to a clustering problem.
 
-In this section we will use the Word2Vec (ref \cite{41224}, \cite{NIPS2013_5021}) method from NLP to find the vector embedding of the categorical features. Here is a brief overview:
+In this section we will use the Word2Vec (ref \cite{41224}, \cite{NIPS2013_5021}) method from NLP to find the vector embedding of the categorical features.
+Here is a brief overview:
 
-\paragraph{Word2Vec} is a two-layer neural net that processes text by vectorizing words. Its input is a text corpus and its output is a set of vectors: feature vectors that represent words in that corpus. While Word2vec is not a deep neural network, it turns text into a numerical form that deep neural networks can understand.
+\paragraph{Word2Vec} is a two-layer neural net that processes text by vectorizing words.
+Its input is a text corpus and its output is a set of vectors: feature vectors that represent words in that corpus.
+While Word2vec is not a deep neural network, it turns text into a numerical form that deep neural networks can understand.
 
 \vspace{1em}
 \begin{figure}[!ht]
@@ -341,7 +361,10 @@ In this section we will use the Word2Vec (ref \cite{41224}, \cite{NIPS2013_5021}
 \end{figure}
 \pagebreak
 
-To illustrate, let assume we have 5 APIs running 7 days a week. Some APIs are used more on weekends while some APIs are used more on weekdays. We can use cat2vec method to find the similarity measure between API-API, DAY-DAY, and API-DAY. Here is a sample example:
+To illustrate, let assume we have 5 APIs running 7 days a week.
+Some APIs are used more on weekends while some APIs are used more on weekdays.
+We can use cat2vec method to find the similarity measure between API-API, DAY-DAY, and API-DAY.
+Here is a sample example:
 
 \vspace{2em}
 \begin{figure}[!ht]
@@ -356,17 +379,22 @@ To illustrate, let assume we have 5 APIs running 7 days a week. Some APIs are us
     \label{fig:distance-matrix}
     \centering
     \includegraphics[width=0.7\textwidth]{../fig/chapter4/InterFeatureDistance.png}
-    \captionsource{cat2vec sample run}
+    \captionsource{distance matrix}
     {\href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/cat2vec.py}{@KishoreKaushal/AnomalyDetection}}
 \end{figure}
 
 
 
-Figure 4.3 is the distance matrix for the sample problem discussed above. We can use the vector embeddings generated by cat2vec with Isolation Forest and distance matrix for eliminating the need of domain expert to handle the categorical dataset. 
+Figure 4.3 is the distance matrix for the sample problem discussed above.
+We can use the vector embeddings generated by cat2vec with Isolation Forest and distance matrix for eliminating the need of domain expert to handle the categorical dataset.
 
 \section{Conclusion}
+\label{sec:conclusion}
 
-This concludes this report on anomaly detection. We discussed two state of the art algorithms. We discussed issues with them and tried to improve upon them on this chapter.
-You can find the implementations of these methods and algorithms at my repository. I am happy to boast that (at present) my code is the only good implementation of PIDForest and feedback guided anomaly discovery available on internet.
+This concludes this report on anomaly detection.
+We discussed two state-of-the-art algorithms.
+We discussed issues with them and tried to improve upon them on this chapter.
+You can find the implementations of these methods and algorithms at my repository.
+I am happy to boast that (at present) my code is the only good implementation of PIDForest and feedback guided anomaly discovery available on the internet.
 
-In the next chapter we will briefly discuss my works on AI in Image Compression, which unfortunately I have to stop in the middle as a consequence of COVID-19 pandemic, because of lack of resources like stable internet and GPU for computation at my home during lockdown.
+In the next chapter we will briefly discuss my works on AI in Image Compression, which unfortunately I have to stop in the middle as a consequence of COVID-19 pandemic, because of lack of resources like stable internet and GPU for computation at my home during the lockdown.
