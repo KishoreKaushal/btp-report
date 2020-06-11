@@ -1,16 +1,90 @@
 \chapter{Contributions}
 \label{ch:contributions}
 
-The algorithm presented in previous chapter has $O(n)$ time 
-complexity. We further propose another
-distributed algorithm in this chapter based on xyz which has linear time 
-complexity.
+We concluded previous chapter section \ref{sec:pidforest-conclusion} by mentioning these issues:
+\vspace{-0.5em}
+\begin{itemize}
+    \setlength\itemsep{-0.5em}
+    \item Online Anomaly detection
+    \item Handling categorical attributes
+    \item Concept Drift
+\end{itemize}
 
-\section{Construction}
+In this chapter I will present some enhancements that can be made to improve the performance of isolation forest and pidforest.
 
-Write ...
+
+\section{Feedback guided anomaly detection}
+\label{sec:feedback-guided-anomaly-detection}
+
+Anomaly detectors are often used to produce a ranked list of statistical anomalies, which are examined by human analysts in order to extract the actual anomalies of interest. 
+
+This can be exceedingly difficult and time consuming when most high-ranking anomalies are false positives and not interesting from an application perspective. 
+
+Siddiqui et al. \cite{10.1145/3219819.3220083} address this problem and gives a general framework of how we can convert unsupervised anomaly detection to a semi-supervised anomaly detection problem in which a feedback is given by a domain expert which is used to improve the accuracy of the anomaly detection model. 
+Feedback guided anomaly discovery can be model in online convex optimization (OCO) framework. 
+
+
+\subsection{Online convex optimization}
+\label{subsec:online-convex-optimization}
+
+OCO is formulated as an iterative game against a potentially adversarial environment where our moves are vectors from a convex set $S$. At discrete time steps $t$ the game proceeds as follows:
+
+\begin{enumerate}
+    \setlength\itemsep{-0.5em}
+    \item We select a vector $w_t \in S$.
+    \item The environment selects a convex function $f_t:S \rightarrow R$.
+    \item We suffer a loss $f_t(w_t)$.
+\end{enumerate}
+
+The goal is to select a sequence of vectors with small accumulated loss over time. 
+Given, a $T$-step game episode where we play $(w_1, w_2, \dot , w_T)$ against $(f_1, f_2, \dot,f_T)$ the total $T$ step regret is equal to:
+
+\begin{equation}
+    \label{eq:regret}
+    Regret_T = \sum_{t=1}^{T} f_t(w_t) - \min_{w^* \in S} \sum_{t=1}^{T} f_t(w^*)
+\end{equation}
+
+Refer chapter 2 of \cite{10.1561/2200000018} for more details.
+
+\subsection{Modelling in OCO framework}
+\label{subsec:query-guided-anomaly-discovery-as-oco}
+
+Query-guided anomaly discovery can also be viewed as a game
+where on each round we output an anomaly ranking over the data
+instances and we get feedback on the top-ranked instance. We
+wish to minimize the number of times we receive "nominal" as the
+feedback response.
+
+To put this problem in OCO framework Siqqiqui et al. \cite{10.1145/3219819.3220083} have put some reasonable restrictions on the form of the anomaly detectors that we will consider.
+Only family of generalized linear anomaly detectors(GLADs) which are defined by i) a feature function $\phi : D \rightarrow R^n$, which maps data instances to n-dimenstional vectors and ii) n-dimenstional weight vector $w$ are considered.
+In this context anomaly score for an instance $x$ is defined to be $SCORE(x;w) = - \phi \cdot w$ with larger score corresponding to more anomalous instances.
+
+
+
+Given, a GLAD parameterization of an anomaly detector, we can now connect query-guided anomaly discovery to OCO.
+
+On each feedback round we select a vector $w_t$ for the detector, which specifies an anomaly ranking over instances. 
+We recieve feedback $y_t$ on the top ranked instance, where $y_t = +1$ if the instance is alien and $y_t = -1$ if it is nominal.
+
+There are three choices of loss function given in the Siddqui et al. \cite{10.1145/3219819.3220083}: i) Linear loss ii) Log-likelihood loss iii) logistic loss. 
+
+With the experiments, I came to a conclusion that overall linear loss performs better than other two in terms of performance, computational complexity, and accuracy. Hence, throughout this report I will stick with only linear loss.
+
+\begin{defn}
+    \label{defn:linear-loss}
+    (Linear loss)
+    Let $x_t$ be the top-ranked instance in $D$ under the ranking given by $w_t$. The linear loss is given by 
+
+    \vspace{-2em}
+    \begin{equation}
+        \label{eq:linear-loss}
+        f_t(w_t) = -y_t SCORE(x_t;w_t) = y_t w_t \cdot \phi (x_t)
+    \end{equation}
+\end{defn}
 
 \section{Improved Method}
+
+
 
 Write...
 
