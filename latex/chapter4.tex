@@ -86,6 +86,7 @@ Algorithm 1 of Siqqiqui et al. \cite{10.1145/3219819.3220083} gives a general fr
 
 
 \section{Feedback guided isolation forest}
+\label{sec:feedback-guided-iforest}
 
 The isolation forest assigns an anomaly score to an instance $x$ based on its average isolation depth across the randomized forest, ref [\ref{alg:PathLength}]. 
 In particular, the score is (a normalized version of) the negative of
@@ -206,3 +207,18 @@ Now the modified model for isolation forest is given by the following algorithms
 \vspace{2em}
 
 You can find the complete implementation of the  \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/FeedbackIsolationForest.py}{feedback guided isolation forest} at my respository: \url{https://github.com/KishoreKaushal/AnomalyDetection}
+
+
+
+\section{Feedback guided PIDForest}
+\label{sec:feedback-guided-pidforest}
+
+The anomaly score for PIDForest is the maximum sparsity among all the PIDTrees.
+We need to define a GLAD model that replicates pidforest.
+
+\textbf{Define $\phi_{leaf}(x)$} be a binary feature for a $leaf$ node which is 1 if instance $x$ falls in that leaf.
+\textbf{Define $w_{leaf}$} be the sparsity of that $leaf$ node.
+\textbf{Define $\phi$}  be a vector that concatenate all of the features across the forest in a consistent order.
+\textbf{Define $w$}  be a vector that concatenate all of the weights across the forest in a consistent order.
+
+Now the modified model for pidforest is given by the following algorithms:
