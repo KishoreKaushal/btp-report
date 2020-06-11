@@ -101,3 +101,107 @@ We need to define a GLAD model that replicates isolation forest.
 Now the modified model for isolation forest is given by the following algorithms:
 
 
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \caption{$feedbackITree(X)$}\label{alg:feedback-guided-itree}
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwComplexity{Time - $O(\psi^2)$, Space - $O(\psi)$}
+    \KwInput{$X$ - input data}
+    \KwOutput{a $feedbackITree$}
+
+    q $\leftarrow \: RandomChoice(X.attributes)$
+
+    p $\leftarrow \: RandomNumber(X[$splitAttr$].min(), X[$splittAttr$].max())$
+
+    ftree $\leftarrow$ Node \{ left $\leftarrow$ None, right $\leftarrow$ None, 
+    
+    \qquad\qquad\qquad size $\leftarrow \: X.size$, splitAttr $\leftarrow$ q, 
+    
+    \qquad\qquad\qquad splitVal $\leftarrow$ p, $w \leftarrow 1$, $\theta \leftarrow 1$\}   \tcp*{$w,\theta$ for mirror descent}
+
+    \If{X.size $>$ 1 and X[splitAttr].numUnique() $>$ 1}{
+        $X_{l} \: \leftarrow  \: X.where(q < p)$
+
+        $X_{r} \: \leftarrow  \: X.where(q \geq p)$
+
+        ftree.left $\leftarrow \: feedbackITree(X_{l})$
+
+        ftree.right $\leftarrow \: feedbackITree(X_{r})$
+    }
+
+    \Return{ftree}
+\end{algorithm}
+\vspace{1em}
+
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \caption{$unadjustedPathLength(x, T, hlim, e)$}\label{alg:unadjustedPathLength}
+    \DontPrintSemicolon
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwComplexity{Time - $O(t\psi)$, Space - $O(1)$}
+    \KwInput{$x$ - input instance, $T$ - a $feedbackITree$, $hlim$ - height limit, $e$ - current path length to be initialized to zero when called first time}
+    \KwOutput{path length of $x$}
+
+    \If{ (T.right is None) and (T.left is none) and (e $\geq$ hlim)}{
+
+        \Return $e$ \tcp*{removed the adjustment, return unadjusted path length}
+
+    }
+
+    $a \: \leftarrow \: T.splitAttr$
+
+    \tcp{(e + 1) $\rightarrow$ e + (weight of the edge)}
+
+    \If{ $x[a] < T.splitVal$}{
+        \Return  $PathLength(x, T.left, hlim, e + T.w)$
+    }
+    \Else{
+        \Return  $PathLength(x, T.right, hlim, e + T.w)$
+    }
+\end{algorithm}
+\pagebreak
+
+
+\vspace{1em}
+\begin{algorithm}[H]
+    \caption{$updateWeights(x, T, hlim, \eta, y)$}\label{alg:updateWeights}
+    \DontPrintSemicolon
+    \setstretch{1.2}
+    \SetAlgoLined
+    \KwComplexity{Time - $O(t\psi)$, Space - $O(1)$}
+    \KwInput{$x$ - input instance, $T$ - a $feedbackITree$, $hlim$ - height limit, $\eta$ - learning rate, $y$ - feedback}
+    \KwOutput{path length of $x$}
+
+    \If{ (T.right is None) and (T.left is none) and (e $\geq$ hlim)}{
+
+        \Return \tcp*{no child node, all weights updated}
+
+    }
+
+    $a \: \leftarrow \: T.splitAttr$
+
+    \If{ $x[a] < T.splitVal$}{
+
+        nextNode $\leftarrow T.left$
+        
+    }
+    \Else{
+
+        nextNode $\leftarrow T.right$
+        
+    }
+
+    \tcp{mirror descent update}
+
+    $nextNode.\theta \leftarrow nextNode.\theta - \eta * y$
+
+    $nextNode.w \leftarrow nextNode.\theta * (nextNode.\theta \geq 0)$
+
+    $updateWeights(x, \&nextNode, hlim, \eta, y)$
+\end{algorithm}
+\pagebreak
+
