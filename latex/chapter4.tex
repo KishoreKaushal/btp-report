@@ -66,9 +66,9 @@ Given, a GLAD parameterization of an anomaly detector, we can now connect query-
 On each feedback round we select a vector $w_t$ for the detector, which specifies an anomaly ranking over instances. 
 We recieve feedback $y_t$ on the top ranked instance, where $y_t = +1$ if the instance is alien and $y_t = -1$ if it is nominal.
 
-There are three choices of loss function given in the Siddqui et al. \cite{10.1145/3219819.3220083}: i) Linear loss ii) Log-likelihood loss iii) logistic loss. 
+There are three choices of loss function given in the Siddqui et al. \cite{10.1145/3219819.3220083}: i) linear loss ii) log-likelihood loss iii) logistic loss. 
 
-With the experiments, I came to a conclusion that overall linear loss performs better than other two in terms of performance, computational complexity, and accuracy. Hence, throughout this report I will stick with only linear loss.
+With the experiments, I came to conclusion that overall linear loss performs better than other two in terms of performance, computational complexity, and accuracy. Hence, throughout this report I will stick with only linear loss.
 
 \begin{defn}
     \label{defn:linear-loss}
@@ -82,15 +82,22 @@ With the experiments, I came to a conclusion that overall linear loss performs b
     \end{equation}
 \end{defn}
 
-\section{Improved Method}
+Algorithm 1 of Siqqiqui et al. \cite{10.1145/3219819.3220083} gives a general framework in which OCO can be applied on anomaly detector methods for query-guided anomaly discovery. In the next section we will model the isolation forest and pidforest in OCO framework.
 
 
+\section{Feedback guided isolation forest}
 
-Write...
+The isolation forest assigns an anomaly score to an instance $x$ based on its average isolation depth across the randomized forest, ref [\ref{alg:PathLength}]. 
+In particular, the score is (a normalized version of) the negative of
+this average depth.
 
-\section{Conclusion}
-In this chapter, we proposed another distributed algorithm for
-XYZ. This algorithm has both time complexity of $O(n)$ where $n$
-is the total number of nodes.  In next chapter, we conclude and
-discuss some of the future aspects.
+We need to define a GLAD model that replicates isolation forest.
+
+\textbf{Define $\phi_e(x)$} be a binary feature that is 1 if instance x goes through the edge and 0 otherwise.
+\textbf{Define $w_e$} be the weight of each edge.
+\textbf{Define $\phi$}  be a vector that concatenate all of the features across the forest in a consistent order.
+\textbf{Define $w$}  be a vector that concatenate all of the weights across the forest in a consistent order.
+
+Now the modified model for isolation forest is given by the following algorithms:
+
 
