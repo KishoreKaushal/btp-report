@@ -11,14 +11,14 @@ In this chapter we will point out some major issues with isolation forest and di
 
 \paragraph{Random Split:} iForest repeatedly samples a set $X'$ of $\psi$ points from $X$ and builds a random tree with those points as leaves. 
 The tree is built by choosing a random co-ordinate $q$, and a random value $p$ in its range about which to split. 
-Since isolation forest chooses which coordinate we split on as well as the breakpoint at random.
-Thus, to be isolated at small depth frequently, picking splits at random must have a good chance of isolating an anomalous point.
-Although, there are other variants like extended isolation forest which improves on this, but there is no significant improvements.
+Thus, isolation forest chooses which coordinate we split on as well as the breakpoint at random.
+Hence, to be isolated at small depth frequently, picking splits at random must have a good chance of isolating an anomalous point.
+Although, there are other variants like extended isolation forest which improves on this, but there are no significant improvements.
 
-\paragraph{High Dimensional:} As the number of co-ordinates or attributes increases, probability of choosing a sequence of attributes for split which gives rise to most of the anomalies will be very less. 
-Hence, it is very likely that anomalous points won't be isolated near the root and false negative cases will increase. (In anomaly detection problem, anomaly is the true class.)
+\paragraph{High Dimensionality:} As the number of co-ordinates or attributes increases, probability of choosing a sequence of attributes for split which gives rise to most of the anomalies will be very less. 
+Hence, it is very likely that anomalous points won't be isolated near the root and false negative cases will increase. (In anomaly detection problems, anomaly is the true class.)
 
-\paragraph{Presence of non-ordinal categorical attributes:} A very big limitation of isolation forest is that it only works for those datasets where all the features are real-values or ordinal.
+\paragraph{Presence of non-ordinal categorical attributes:} A very big limitation of isolation forest is that it only works for those datasets where all the features are real-values or ordinal. For example, consider a feature \textbf{HTTP\_REQUEST} which can take one of these values: \{GET, POST, DELETE, CONNECT, HEAD, TRACE, PUT, OPTIONS\}. We cannot use isolation forest on a dataset containing this feature because there is no way we can perform a comparison to split the data with this feature.
 
 \section{Partial Identification}
 \label{sec:partial-identification}
@@ -160,7 +160,7 @@ However, the way the trees are constructed, and the criteria by which a point is
 Vatsal et al. \cite{NIPS2019_9710} provided a rough idea on how a PIDForest is to be constructed without emphasising much on the pseudo-code.
 In this report we will fill the gaps and provide pseudo-codes for various data structures to be implemented for PIDForest.
 
-Each node of a tree corresponds to a subcube $C$, the children of $C$ represent a disjoint partition of $C$ along some axis $i \in [d]$ (iTree$^{[\ref{alg:iTree}]}$ always splits C into two, here finer partition is allowed).
+Each node of a tree corresponds to a subcube $C$, the children of $C$ represent a disjoint partition of $C$ along some axis $i \in [d]$ (iTree algorithm~\ref{alg:iTree}, always splits C into two, here finer partition is allowed).
 The goal is to have large variance in the sparsity ($\rho$) of the subcubes. 
 Ultimately, the leaves with large sparsity values will point to regions with anomalies.
 
@@ -170,7 +170,7 @@ For the root, $C(v) = [0, 1]^d$ and $P (v) = P$.
 At each internal node, we pick a coordinate $j \in [d]$, and breakpoints $t_{1} \leq ... \leq t_{k-1}$ which partition $I_j$ into $k$ intervals, and split $C$ into $k$ subcubes. 
 
 \textbf{How to choose the partition?} We want to partition the cube into some sparse regions and some dense regions. 
-This idea is formulized in section 3 of Vatsal et al. \cite{NIPS2019_9710} and the objective functions turns out to be:
+This idea is formalized in section 3 of Vatsal et al. \cite{NIPS2019_9710} and the objective functions turns out to be:
 
 \vspace{-2em}
 \begin{equation}
@@ -374,7 +374,7 @@ Here we are going to use $(1+ \epsilon)-$factor approximation algorithm for hist
 
 \pagebreak
 
-Algorithm \ref{alg:pidtree} uses $findSplit(...)$ method to partition the current subcube into disjoint child subcubes.
+Algorithm~\ref{alg:pidtree} uses $findSplit(...)$ method to partition the current subcube into disjoint child subcubes.
 $findSplit(...)$ uses the $AHIST-S(...)$ procedure given by Guha et. al \cite{10.1145/1132863.1132873} which is $(1+\epsilon)-$factor approximation of V-optimal histogram construction.
 Due to complexity of the $findSplit(...)$ function we have not provided its pseudo-code.
 You can find my implementation of the PIDForest and AHIST-S at \href{https://github.com/KishoreKaushal/AnomalyDetection/tree/master/pidforest}{this code repository}.
@@ -392,7 +392,7 @@ PIDForest improves upon the issues with isolation forest.
 Instead of choosing an attribute for partitioning a node into disjoint sets, PIDForest uses AHIST-S method to select an attribute with higher variance.
 Instead of choosing a random splitting value which is used to partition the set into two, PIDForest used AHIST-S method to get the optimal buckets which is used to do finer partition not limited to 2.
 
-As discussed in section \ref{sec:issues-with-iforest} isolation forest struggles to give decent results for high dimensional data, on the other hand PIDForest doesn't choose the splitting attribute with uniform probability, it gives more preference to the attribute which has more variance, therefore doesn't suffer much from higher dimension.
+As discussed in section~\ref{sec:issues-with-iforest} isolation forest struggles to give decent results for high dimensional data, on the other hand PIDForest doesn't choose the splitting attribute with uniform probability, it gives more preference to the attribute which has more variance, therefore doesn't suffer much from higher dimension.
 
 PIDForest is more complex data structure in comparison to Isolation Forest.
 
@@ -408,6 +408,6 @@ Masking and swamping is well handled by the isolation forest and pidforest.
 Concept drift is a major challenge in online anomaly detection. 
 Because of small time and space complexity of these methods, these methods can be easily used for online anomaly detection, i.e, we can retrain the model as the new data comes but this is a very poor way to handle the concept drift.
 Another problem with these ensemble methods is poor handling of categorical attributes.
-We have already seen that isolation forest can't handle non-ordinal data, whereas PIDForest requires external input from domain expert.
+We have already seen that isolation forest can't handle non-ordinal data, whereas PIDForest requires external input from domain experts.
 
 In the next chapter I will present some modifications to these existing methods and present a general framework in which these methods can be improved to handle categorical data, concept drift and online anomaly detection.
