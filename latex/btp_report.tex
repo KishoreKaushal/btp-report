@@ -9,6 +9,8 @@
 \usepackage{hyperref}
 \usepackage{epsfig,color}
 % Custom packages
+\usepackage{cleveref}
+
 %\usepackage[first]{datestamp}   % Datestamp on first page of each chapter
 \usepackage{caption}
 \usepackage{breqn}
@@ -37,7 +39,7 @@
 % Below margin is space below footer
 %\abovemargin = 1.5in \belowmargin = 0.05in
 
-\btptitle = {AI in Anomaly Detection and Image Compression} % { and } are needed around your name
+\btptitle = {Artificial Intelligence for Image Processing and Anomaly Detection} % { and } are needed around your name
 \name = {Kaushal Kishore}          % and other feilds. don't remove.
 \rollno = {111601008}
 \email = {111601008@smail.iitpkd.ac.in}
@@ -57,31 +59,53 @@
     \addcontentsline{toc}{chapter}{List of Figures}
     \listoffigures
 
-    \addcontentsline{toc}{chapter}{List of Tables}
-    \listoftables
+    % \addcontentsline{toc}{chapter}{List of Tables}
+    % \listoftables
 
     \pagenumbering{arabic}
     \def\headrulehook{\color{black}}      % Color the header rule
 
 %========== Chapters
+    \clearpage
+    \vspace*{\fill}% * is needed here
+    \noindent
+    \makebox[\textwidth]{\Huge Phase-1: Before Lockdown}
+    \makebox[\textwidth]{\small Code Repository: \url{https://github.com/KishoreKaushal/ImageCompression}}
+    \makebox[\textwidth]{\small Full Report: \url{https://github.com/KishoreKaushal/btp-report-phase2}}
+    \vfill
+
+    \typeout{}
+    \include{midsemwork}
+
+    \clearpage
+    \vspace*{\fill}% * is needed here
+    \noindent
+    \makebox[\textwidth]{\Huge Phase-2: After Lockdown}
+    \makebox[\textwidth]{\small Code Repository: \url{https://github.com/KishoreKaushal/AnomalyDetection}}
+    \makebox[\textwidth]{\small Report: \url{https://github.com/KishoreKaushal/btp-report}}
+    \vfill
+
     \typeout{}
     \include{chapter1}
     \cleardoublepage
+
     \typeout{}
     \include{chapter2}
     \cleardoublepage
+
     \typeout{}
     \include{chapter3}
     \cleardoublepage
+
     \typeout{}
     \include{chapter4}
     \cleardoublepage
-    \typeout{}
-    \include{midsemwork}
-    \cleardoublepage
+
     \typeout{}
     \include{futurework}
     \typeout{}
+
+    
 
     \bibliographystyle{IEEEtran}
     \bibliography{btp}
