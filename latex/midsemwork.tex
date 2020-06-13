@@ -4,6 +4,25 @@
 In this chapter I will breifly summarise my works till March 17, 2020. The full version of this report can be found here: 
 \href{https://github.com/KishoreKaushal/btp-report-phase2/blob/master/btp_report.pdf}{midsem-report.pdf}
 
+\section{Image processing and key phases}
+
+Image processing is manipulating an image in order to enhance it or extract information from it. 
+It is widely useed in medical visualization, biometrics, self-driving vehicles, gaming, surveillance, and law enforcement. It can used in various ways: visualization, restoration, imformation retrieval, pattern recognition, etc.
+
+\vspace{1em}
+\begin{figure}[!ht]
+    \label{fig:keyPhasesOfImageProcessing}
+    \centering
+    \includegraphics[width=0.60\textwidth]{../fig/midsemwork/keyPhasesOfImageProcessing.png}
+    \caption{Steps for dimensionality reduction using PCA}
+\end{figure}
+
+\pagebreak
+General approach of image processing involves eight key phases: image acquisition, image enhancement, image restoration, color space transformation, compression or decompression, morphological processing, recognition, and representation. 
+It is very difficult to carry out these steps manually on a very big data, this is where AI and ML algorithms become very helpful.
+
+
+
 \section{Compression}
 
 A data compression algorithm transforms the data to occupy a less space.
@@ -47,7 +66,7 @@ The basic steps for computing the PCA is as follows:
 \begin{figure}[!ht]
     \label{fig:dimensionalityReductionSteps}
     \centering
-    \includegraphics[width=0.75\textwidth]{../fig/chapter5/dimensionalityReductionUsingPCA.png}
+    \includegraphics[width=0.75\textwidth]{../fig/midsemwork/dimensionalityReductionUsingPCA.png}
     \caption{Steps for dimensionality reduction using PCA}
 \end{figure}
 
@@ -60,7 +79,7 @@ We will follow the steps mentioned in the previous section for dimensionality re
 \begin{figure}[!ht]
     \label{fig:imageCompressionUsingPCA}
     \centering
-    \includegraphics[width=1\textwidth]{../fig/chapter5/ImageCompressionWithPCA.png}
+    \includegraphics[width=1\textwidth]{../fig/midsemwork/ImageCompressionWithPCA.png}
     \caption{CR = Compression Ratio, SSIM = Structural Similarity Index, VAR = Variance. Results of compression using the PCA method. Higher variance leads to more number of principal components and higher is the reconstructed image quality and lower the compression rate.}
     
 \end{figure}
@@ -83,7 +102,7 @@ Finally, the quantized block of values are arranged in form of a row-vector and 
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.80\textwidth]{../fig/chapter5/jpeg-codec.png}
+    \includegraphics[width=0.80\textwidth]{../fig/midsemwork/jpeg-codec.png}
     \caption{JPEG Schematic}
     \label{fig:jpegSchematic}
 \end{figure}
@@ -106,4 +125,4 @@ We can then use this to train our omodel to generate a better quantization matri
 
 \section{Conclusion}
 
-In this chapter we breifly discussed our works before till Mar 17, 2020. 
+In this chapter we breifly discussed our works before till Mar 17, 2020. In the next phase we will discuss our works on after Mar 17, 2020.
