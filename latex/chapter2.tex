@@ -42,8 +42,8 @@ The evaluation parameter is the tree height limit during evaluation.
     {Lui et al. \cite{10.1145/2133360.2133363}}
 \end{figure}
 
-\section{Training Stage}
-\label{sec:iforest-training}
+\section{Isolation forest algorithm}
+\label{sec:iforest-algorithm}
 
 Formally, we can define isolation forest as follows:
 
@@ -126,7 +126,7 @@ Formally, we can define isolation forest as follows:
 \end{algorithm}
 \vspace{1em}
 
-\section{Evaluation Stage}
+\section{Evaluation}
 \label{sec:iforest-evaluation}
 
 
@@ -157,7 +157,7 @@ Formally, we can define isolation forest as follows:
 \end{algorithm}
 \pagebreak
 
-In the evaluation stage$^{[\ref{alg:PathLength}]}$, a single path length $h(x)$ is derived by counting the number of edges $e$ from the root node to an external node as instance $x$ traverses through an iTree.
+In the evaluation stage, a single path length $h(x)$ is derived by counting the number of edges $e$ from the root node to an external node as instance $x$ traverses through an iTree.
 When the traversal reaches a predefined height limit $hlim$, the return value is $e$ plus an adjustment $c(size)$.
 This adjustment accounts for estimating an average path length of a random sub-tree which could be constructed using data of $size$ beyond the tree height limit.
 When $h(x)$ is obtained for each tree of the ensemble, an anomaly score is computed.
@@ -221,7 +221,7 @@ In practical use cases, one has to set a threshold deciding the result.
 And finding a good threshold is a very difficult task.
 Most of the times the anomalous points' score overlaps with the nominal points' score.
 
-\section{Isolation vs. Distance and Density}
+\section{Comparing isolation with distance and density measure}
 \label{sec:isolation-vs-distance-density}
 
 Using basic density measures, the assumption is that ‘Normal points occur in dense regions, while anomalies occur in sparse regions’.
