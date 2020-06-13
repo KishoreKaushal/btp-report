@@ -1,7 +1,7 @@
 \chapter{PIDForest}
 \label{ch:pidforest}
 
-In chapter \ref{ch:introduction} we discussed some challenges that an anomaly detection algorithm face.
+In \cref{ch:introduction} we discussed some challenges that an anomaly detection algorithm face.
 In the previous chapter we discussed an isolation based ensemble method which is a very good method in terms of complexity and accuracy.
 Isolation forest tried to address the problems related to masking and swamping.
 In this chapter we will point out some major issues with isolation forest and discuss another ensemble method, which improves upon those issues.
@@ -154,7 +154,7 @@ The right choice will depend on the dataset, and it requires input from domain e
 \section{PIDForest Algorithm}
 \label{sec:pidforest-algorithm}
 
-Like with isolation forest, the PIDForest algorithm builds an ensemble of decision trees, each tree is built using a sample of the data set and partitions the space into subcubes.
+Like with isolation forest, the PIDForest (Partial ID forest) algorithm builds an ensemble of decision trees, each tree is built using a sample of the data set and partitions the space into subcubes.
 However, the way the trees are constructed, and the criteria by which a point is declared anomalous are very different.
 
 Vatsal et al. \cite{NIPS2019_9710} provided a rough idea on how a PIDForest is to be constructed without emphasising much on the pseudo-code.
@@ -403,7 +403,7 @@ PIDForest is arguably one of the best off-the-shelf algorithms for anomaly detec
 It inherits many of the desirable features of Isolation Forests,while also improving on it in important ways.
 This ends the breif discussion on PIDForest algorithm, you can refer to Vatsal et al. \cite{NIPS2019_9710} for more details.
 
-In chapter \ref{ch:introduction} I discussed some major challenges face by any anomaly detection algorithm.
+In \cref{ch:introduction}, I discussed some major challenges face by any anomaly detection algorithm.
 Masking and swamping is well handled by the isolation forest and pidforest. 
 Concept drift is a major challenge in online anomaly detection. 
 Because of small time and space complexity of these methods, these methods can be easily used for online anomaly detection, i.e, we can retrain the model as the new data comes but this is a very poor way to handle the concept drift.
