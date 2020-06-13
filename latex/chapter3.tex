@@ -403,11 +403,11 @@ PIDForest is arguably one of the best off-the-shelf algorithms for anomaly detec
 It inherits many of the desirable features of Isolation Forests,while also improving on it in important ways.
 This ends the breif discussion on PIDForest algorithm, you can refer to Vatsal et al. \cite{NIPS2019_9710} for more details.
 
-In \cref{ch:introduction}, I discussed some major challenges face by any anomaly detection algorithm.
+In \cref{ch:introduction}, we discussed some major challenges face by any anomaly detection algorithm.
 Masking and swamping is well handled by the isolation forest and pidforest. 
 Concept drift is a major challenge in online anomaly detection. 
 Because of small time and space complexity of these methods, these methods can be easily used for online anomaly detection, i.e, we can retrain the model as the new data comes but this is a very poor way to handle the concept drift.
 Another problem with these ensemble methods is poor handling of categorical attributes.
 We have already seen that isolation forest can't handle non-ordinal data, whereas PIDForest requires external input from domain experts.
 
-In the next chapter I will present some modifications to these existing methods and present a general framework in which these methods can be improved to handle categorical data, concept drift and online anomaly detection.
+In the next chapter we will present some modifications to these existing methods and present a general framework in which these methods can be improved to handle categorical data, concept drift and online anomaly detection.
