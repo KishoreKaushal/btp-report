@@ -10,7 +10,7 @@ We concluded previous chapter section \ref{sec:pidforest-conclusion} by mentioni
     \item Concept Drift
 \end{itemize}
 
-In this chapter I will present some enhancements that can be made to improve the performance of isolation forest and pidforest.
+In this chapter we will present some enhancements that can be made to improve the performance of isolation forest and pidforest.
 
 
 \section{Feedback guided anomaly detection}
@@ -91,7 +91,7 @@ In the next section we will model the isolation forest and pidforest in OCO fram
 \section{Feedback guided isolation forest}
 \label{sec:feedback-guided-iforest}
 
-The isolation forest assigns an anomaly score to an instance $x$ based on its average isolation depth across the randomized forest, ref [\ref{alg:PathLength}].
+The isolation forest assigns an anomaly score to an instance $x$ based on its average isolation depth across the randomized forest, ref \ref{alg:PathLength}.
 In particular, the score is (a normalized version of) the negative of
 this average depth.
 
@@ -209,7 +209,7 @@ Now the modified model for isolation forest is given by the following algorithms
 \end{algorithm}
 \vspace{2em}
 
-You can find the complete implementation of the  \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/FeedbackIsolationForest.py}{feedback guided isolation forest} at my repository: \url{https://github.com/KishoreKaushal/AnomalyDetection}
+You can find the complete implementation of the  \href{https://github.com/KishoreKaushal/AnomalyDetection/blob/master/isolationforest/FeedbackIsolationForest.py}{feedback guided isolation forest} at this repository: \url{https://github.com/KishoreKaushal/AnomalyDetection}.
 
 
 
@@ -395,6 +395,6 @@ This concludes this report on anomaly detection.
 We discussed two state-of-the-art algorithms.
 We discussed issues with them and tried to improve upon them on this chapter.
 You can find the implementations of these methods and algorithms at my repository.
-I am happy to boast that (at present) my code is the only good implementation of PIDForest and feedback guided anomaly discovery available on the internet.
+We are happy to boast that (at present) our code is the only good implementation of PIDForest and feedback guided anomaly discovery available on the internet.
 
-In the next chapter we will briefly discuss my works on AI in Image Compression, which unfortunately I have to stop in the middle as a consequence of COVID-19 pandemic, because of lack of resources like stable internet and GPU for computation at my home during the lockdown.
+% In the next chapter we will briefly discuss my works on AI in Image Compression, which unfortunately I have to stop in the middle as a consequence of COVID-19 pandemic, because of lack of resources like stable internet and GPU for computation at my home during the lockdown.
