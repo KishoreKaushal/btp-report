@@ -21,7 +21,7 @@ Anomaly detectors are often used to produce a ranked list of statistical anomali
 This can be exceedingly difficult and time-consuming when most high-ranking anomalies are false positives and not interesting from an application perspective.
 
 Siddiqui et al. \cite{10.1145/3219819.3220083} address this problem and gives a general framework of how we can convert unsupervised anomaly detection to a semi-supervised anomaly detection problem in which a feedback is given by a domain expert which is used to improve the accuracy of the anomaly detection model. 
-Feedback guided anomaly discovery can be model in online convex optimization (OCO) framework. 
+Feedback guided anomaly discovery can be modelled in an online convex optimization (OCO) framework. 
 
 
 \subsection{Online convex optimization}
@@ -68,8 +68,8 @@ We receive feedback $y_t$ on the top ranked instance, where $y_t = +1$ if the in
 
 There are three choices of loss function given in the Siddqui et al. \cite{10.1145/3219819.3220083}: i) linear loss ii) log-likelihood loss iii) logistic loss. 
 
-With the experiments, I came to conclusion that overall linear loss performs better than other two in terms of performance, computational complexity, and accuracy.
-Hence, throughout this report I will stick only with linear loss.
+With the experiments, we came to conclusion that overall linear loss performs better than other two in terms of performance, computational complexity, and accuracy.
+Hence, throughout this report we will stick only with linear loss.
 
 \begin{defn}
     \label{defn:linear-loss}
@@ -307,7 +307,7 @@ Now the modified model for pidforest is given by the following algorithms:
 
 By putting these models in OCO framework our algorithm's accuracy increases. 
 Although for a large amount of streaming data the current algorithm is able to handle little-bit of concept drift but as soon the new data diverges too much in value from the data on which these algorithms are trained there are no leaf nodes on which these new instances will fall.
-In the next section, I propose a general framework in which this can be handled.
+In the next section, we propose a general framework in which this can be handled.
 
 \section{Online anomaly detection}
 \label{sec:online-anomaly-detection}
