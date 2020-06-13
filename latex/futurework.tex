@@ -1,5 +1,13 @@
 \chapter{Conclusion and Future Work}
 \label{ch:conclusion-future-work}
 
+This report was divided into two phases. In the first phase we breifly discussed our works (before the COVID-19 lockdown) on artificial intelligence for image compression.
+In the second phase we have changed our project topic to aritificial intelligence for anomaly detection because of lack of resources to continue the initial project during this lockdown. 
 
+In \cref{ch:introduction} we have introduced the anomaly detection problem and some challenges. In \cref{ch:isolation-forest} we have introduced an efficient ensemble technique namely Isolation Forest. In \cref{ch:pidforest} we discussed some issues with the \textbf{Isolation Forest} and introduced a more efficient and accurate ensemble method called \textbf{PIDForest} which outperforms most of the anomaly detection methods at present. Then we discussed that these methods are not able to handle concept drift. 
 
+In the next \cref{ch:contributions} we modelled these methods in online convex optimization framework which allowed them to improve their performance with the feedback received from the domain expert. Then we proposed some methods for using these algorithms in online setting. Then, we used an exisiting NLP method (Word2Vec) to find vector embeddings of the categorical variables, which can also be used to find the similarity between any two categorical features. 
+
+While discussing these algorithms, we have given pseudo codes for various algorithms which was not given in the original paper. We have given the repository link in the beginning of the phase 2 where we have implemented all the algorithms. 
+
+Finally, we conclude this report by mentioning a very important modification that can be made in future, which is to use the concepts of parallel programming to speed up these algorithms.
